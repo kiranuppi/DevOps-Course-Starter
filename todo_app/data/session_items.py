@@ -1,11 +1,10 @@
-import operator
-from operator import itemgetter
-
 from flask import session
+from todo_app.data import trello as session
+
 
 _DEFAULT_ITEMS = [
-    {'id': 1, 'status': 'In Progress', 'title': 'Complete module 1 project work'},
-    {'id': 2, 'status': 'Not Started', 'title': 'Start Module 2 reading'}
+    { 'id': 1, 'status': 'Not Started', 'title': 'List saved todo items' },
+    { 'id': 2, 'status': 'Not Started', 'title': 'Allow new items to be added' }
 ]
 
 
@@ -14,10 +13,14 @@ def get_items():
     Fetches all saved items from the session.
 
     Returns:
-        list: The list of saved items sorted by .
+        list: The list of saved items.
     """
 
-    return session.get('items', _DEFAULT_ITEMS)
+    return session.get_cards_from_list()    
+# https://api.trello.com/1/boards/602594185d55a18c4ea20b22?key=cb605ca676872005168aace21b9fbb90&token=2196313085b9d57c0cffee9e5b4e95326e4fa780b8273d8219461ac061f8a23f
+# https://api.trello.com/1/lists/602594185d55a18c4ea20b23/cards?key=cb605ca676872005168aace21b9fbb90&token=2196313085b9d57c0cffee9e5b4e95326e4fa780b8273d8219461ac061f8a23f
+# https://api.trello.com/1/lists/602594185d55a18c4ea20b23/cards?key=cb605ca676872005168aace21b9fbb90&token=2196313085b9d57c0cffee9e5b4e95326e4fa780b8273d8219461ac061f8a23f
+    # return session.get('items', _DEFAULT_ITEMS)
 
 
 def get_item(id):
@@ -49,7 +52,7 @@ def add_item(title):
     # Determine the ID for the item based on that of the previously added item
     id = items[-1]['id'] + 1 if items else 0
 
-    item = {'id': id, 'title': title, 'status': 'Not Started'}
+    item = { 'id': id, 'title': title, 'status': 'Not Started' }
 
     # Add the item to the list
     items.append(item)
@@ -73,24 +76,11 @@ def save_item(item):
     return item
 
 
-def remove_item(item):
-    """
-    Removes an existing item in the session. If no existing item matches the ID of the specified item, nothing is removed.
+def complete_item(id):
+    item = get_item(id)
 
-    Args:
-        item: The item to remove.
-    """
-    items = get_items()
+    if item != None:
+        item['status'] = 'Completed'
+        save_item(item)
 
-    items_after_delete = [i for i in items if not (i['title'] == item)]
-
-    session['items'] = items_after_delete
-
-    return item
-
-
-def mark_as_complete_item(item_to_complete):
-    item = get_item(item_to_complete)
-    item['status'] = 'Complete'
-    save_item(item)
     return item
