@@ -2,17 +2,80 @@
 {% block title %}To-Do App{% endblock %}
 
 {% block content %}
-  <div class="jumbotron">
+<div class="jumbotron">
     <h1 class="display-4">To-Do App</h1>
-    <p class="lead">Just another to-do app.</p>
-  </div>
+    <p class="lead">Simple App to track To-Do items.</p>
+</div>
+<form action="/completeItem" method="post" class="form-example">
+    <table class="table table-hover css-serial">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Status</th>
+            <th scope="col">Item</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        {% for item in items %}
+        <tbody>
+        <tr>
+            <td></td>
+            <td>
+                <div class="input-group mb-3">
+                    {{ item.status }}
+                </div>
+            </td>
+            <td>
+                <div class="input-group mb-3">
+                    {{item.title}}
+                </div>
+            </td>
+            <td>
+                <div class="input-group mb-3">
+                    <button class="btn btn-link float-right" type="submit" name="complete" value="{{ item.id }}">Mark as
+                        Complete
+                    </button>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <style>
 
-  <div class="row">
-    <div class="col-md-12">
-      <h2>Items</h2>
-      <ul class="list-group mb-4">
-        <!-- List the todo items here -->
-      </ul>
+.css-serial {
+    counter-reset: serial-number; /* Set the serial number counter to 0 */
+}
+
+    .css-serial td:first-child:before {
+        counter-increment: serial-number; /* Increment the serial number counter */
+        content: counter(serial-number); /* Display the counter */
+    }
+
+    </style>
+</form>
+
+
+<form action="/addItem" method="post">
+  <p class="lead">Add a new To-Do item.</p>
+    <div class="input-group mb-1">
+        <input type="text" class="form-control" name="todoitem" id="todoitem_id" required
+               placeholder="Enter the new To Do item">
+        <span class="input-group-btn mb-3">
+        <button class="btn btn-success mb-3" type="submit" value="Add!">Add</button>
+   </span>
     </div>
-  </div>
+</form>
+
+<form action="/removeItem" method="post">
+  <p class="lead">Remove a To-Do item.</p>
+    <div class="input-group">
+        <input type="text" class="form-control" name="remove_todoitem" id="remove_todoitem_id" required
+               placeholder="Enter an item to Remove from the list">
+        <span class="input-group-btn">
+       <button type="submit" class="btn btn-danger" value="Remove!">Remove</button>
+   </span>
+    </div>
+</form>
 {% endblock %}
+

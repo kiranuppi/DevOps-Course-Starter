@@ -1,8 +1,11 @@
+import operator
+from operator import itemgetter
+
 from flask import session
 
 _DEFAULT_ITEMS = [
-    { 'id': 1, 'status': 'Not Started', 'title': 'List saved todo items' },
-    { 'id': 2, 'status': 'Not Started', 'title': 'Allow new items to be added' }
+    {'id': 1, 'status': 'In Progress', 'title': 'Complete module 1 project work'},
+    {'id': 2, 'status': 'Not Started', 'title': 'Start Module 2 reading'}
 ]
 
 
@@ -11,8 +14,9 @@ def get_items():
     Fetches all saved items from the session.
 
     Returns:
-        list: The list of saved items.
+        list: The list of saved items sorted by .
     """
+
     return session.get('items', _DEFAULT_ITEMS)
 
 
@@ -45,7 +49,7 @@ def add_item(title):
     # Determine the ID for the item based on that of the previously added item
     id = items[-1]['id'] + 1 if items else 0
 
-    item = { 'id': id, 'title': title, 'status': 'Not Started' }
+    item = {'id': id, 'title': title, 'status': 'Not Started'}
 
     # Add the item to the list
     items.append(item)
@@ -66,4 +70,27 @@ def save_item(item):
 
     session['items'] = updated_items
 
+    return item
+
+
+def remove_item(item):
+    """
+    Removes an existing item in the session. If no existing item matches the ID of the specified item, nothing is removed.
+
+    Args:
+        item: The item to remove.
+    """
+    items = get_items()
+
+    items_after_delete = [i for i in items if not (i['title'] == item)]
+
+    session['items'] = items_after_delete
+
+    return item
+
+
+def mark_as_complete_item(item_to_complete):
+    item = get_item(item_to_complete)
+    item['status'] = 'Complete'
+    save_item(item)
     return item
