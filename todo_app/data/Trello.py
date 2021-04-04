@@ -1,10 +1,12 @@
+from todo_app.TrelloItem import TrelloItem
 from todo_app.data.ResponseFilter import ResponseFilter
-from todo_app.ListUtils import swap_key_in_list, combine_lists
+from todo_app.ListUtils import search_list
 import requests
 import os
 
 
 class trello:
+    # lists = []
     api_key = os.environ.get('API_KEY')
     api_token = os.environ.get('API_TOKEN')
     trello_board_id = os.environ.get('BOARD_ID')
@@ -38,38 +40,34 @@ class trello:
     @classmethod
     def get_lists(cls):
         if cls.lists_from_board is None:
-            lists = requests.get(
+            cls.lists = requests.get(
                 cls.get_lists_url, params=cls.get_cards_header).json()
-            lists = swap_key_in_list(
-                lists, ResponseFilter.id, ResponseFilter.id_list)
-            cls.lists_from_board = swap_key_in_list(
-                lists, ResponseFilter.name, ResponseFilter.status)
 
-        return cls.lists_from_board
+        return cls.lists
 
     @classmethod
-    def get_all_list_ids(cls, list_name):
+    def get_id_by_list_name(cls, list_name):
         lists = cls.get_lists()
-        return next((item for item in lists if item[ResponseFilter.status] == list_name), None)[ResponseFilter.id_list]
+        return next((item for item in lists if item[ResponseFilter.name] == list_name), None)[ResponseFilter.id]
 
     @classmethod
     def get_todo_list_id(cls):
         if cls.todo_id is None:
-            cls.todo_id = cls.get_all_list_ids(cls.todo_name)
+            cls.todo_id = cls.get_id_by_list_name(cls.todo_name)
 
         return cls.todo_id
 
     @classmethod
     def get_doing_list_id(cls):
         if cls.in_progress_id is None:
-            cls.in_progress_id = cls.get_all_list_ids(cls.in_progress)
+            cls.in_progress_id = cls.get_id_by_list_name(cls.in_progress)
 
         return cls.in_progress_id
 
     @classmethod
     def get_done_list_id(cls):
         if cls.done_id is None:
-            cls.done_id = cls.get_all_list_ids(cls.done)
+            cls.done_id = cls.get_id_by_list_name(cls.done)
 
         return cls.done_id
 
@@ -78,8 +76,11 @@ class trello:
         cards = requests.get(
             trello.get_all_cards_url, params=trello.get_cards_header).json()
         lists = trello.get_lists()
-        items = combine_lists(
-            cards, lists, ResponseFilter.id_list)
+        items = []
+        for card in cards:
+            status = search_list(lists, 'id', card['idList'])['name']
+
+            items.append(TrelloItem(card['id'], card['name'], status))
         return items
 
     @classmethod
@@ -95,8 +96,8 @@ class trello:
 
         return new_card_response
 
-    @staticmethod
-    def move_item(item_id, list_id):
+    @classmethod
+    def move_item(cls, item_id, list_id):
         url = f'{trello.cards_url}/{item_id}'
 
         payload = {
@@ -106,14 +107,14 @@ class trello:
             url=url, params=trello.headers, json=payload).json()
         return response
 
-    @staticmethod
-    def update_to_inprogress(item_id):
+    @classmethod
+    def update_to_inprogress(cls, item_id):
         list_id = trello.get_doing_list_id()
         response = trello.move_item(item_id, list_id)
         return response
 
-    @staticmethod
-    def update_to_done(item_id):
+    @classmethod
+    def update_to_done(cls, item_id):
         list_id = trello.get_done_list_id()
         response = trello.move_item(item_id, list_id)
         return response

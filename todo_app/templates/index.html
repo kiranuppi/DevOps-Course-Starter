@@ -42,13 +42,13 @@
             <td>
                 {% if item.status == 'To Do'%}
                 <a href="{{url_for('move_item', action='start', id=item.id)}}"
-                   class="btn-link"><p class="text-center">Move it to Doing</p></a>
+                   class="btn-link"><p class="text-center">Move it Doing</p></a>
                 {% elif item.status == 'Doing'%}
                 <a href="{{url_for('move_item', action='done', id=item.id)}}"
                    class="btn-link"><p class="text-center">Move it to Done</p></a>
                 {% elif item.status == 'Done'%}
                 <a href="{{url_for('move_item', action='doing', id=item.id)}}"
-                   class="btn-link"><p class="text-center">Move it to To - Do</p></a>
+                   class="btn-link"><p class="text-center">Repeat Task</p></a>
                 {% endif %}
             </td>
         </tr>

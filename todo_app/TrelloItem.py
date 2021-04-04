@@ -1,4 +1,4 @@
-class Trello_Item:
+class TrelloItem:
 
     def __init__(self, id, title, status):
         self.id = id
