@@ -51,5 +51,8 @@ You should see output similar to the following:
  * Debugger is active!
  * Debugger PIN: 226-556-590
 ```
+
+## Running the App in a VM
+ run vagrant up
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
 
