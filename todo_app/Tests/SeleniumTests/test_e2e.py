@@ -7,8 +7,9 @@ from selenium import webdriver
 
 import todo_app.app as app
 
-file_path = find_dotenv('.env')
-load_dotenv()
+file_path = find_dotenv('.env.test')
+load_dotenv(file_path, override=True)
+# load_dotenv()
 api_key = os.environ.get('API_KEY')
 api_token = os.environ.get('API_TOKEN')
 base_url = 'https://api.trello.com/1'
@@ -55,10 +56,11 @@ def app_with_temp_board():
 
     # Create the new board & update the board id environment variable
     board_id = create_trello_board()
-    os.environ['TRELLO_BOARD_ID'] = board_id
+    print(board_id)
+    os.environ['BOARD_ID'] = board_id
     # construct the new application
     application = app.create_app()
-    # start the app in its own thread.
+    # start the my_app in its own thread.
     thread = Thread(target=lambda: application.run(use_reloader=False))
     thread.daemon = True
     thread.start()
