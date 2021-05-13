@@ -1,39 +1,36 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, redirect, url_for, request, app
 
-from todo_app.data import session_items
+from todo_app.data.Trello import trello
 from todo_app.flask_config import Config
 
-app = Flask(__name__)
-app.config.from_object(Config)
 
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
-@app.route('/')
-def index():
-    items = session_items.get_items()
-    sorted_items = sorted(items, key=lambda i: i['status'], reverse=True)
-    return render_template('index.html', items=sorted_items)
+    @app.route('/')
+    def index():
+        app.logger.info('Getting all cards from the board')
+        items = trello.get_list_items()
+        return render_template('index.html', items=items)
 
+    @app.route('/', methods=['POST'])
+    def add_item():
+        app.logger.info('Adding new item on a card')
+        trello.add_new_item(request.form['title'])
+        return redirect('/')
 
-@app.route('/addItem', methods=['POST'])
-def add_items():
-    new_item = request.form.get('todoitem')
-    session_items.add_item(new_item)
-    return index()
+    @app.route('/actions/<action>/<id>')
+    def move_item(action, id):
+        app.logger.info('Moving an item from ')
+        if action in ['start', 'doing']:
+            trello.update_to_inprogress(id)
+        elif action == 'done':
+            trello.update_to_done(id)
 
+        return redirect('/')
 
-@app.route('/completeItem', methods=['POST'])
-def complete_items():
-    position_id = request.form['complete']
-    session_items.mark_as_complete_item(position_id)
-    return index()
+    if __name__ == '__main__':
+        app.run()
 
-
-@app.route('/removeItem', methods=['POST'])
-def remove_items():
-    remove_item = request.form.get('remove_todoitem')
-    session_items.remove_item(remove_item)
-    return index()
-
-
-if __name__ == '__main__':
-    app.run()
+    return app

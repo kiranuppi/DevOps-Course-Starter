@@ -44,6 +44,7 @@ MANIFEST
 
 # Installer logs
 pip-log.txt
+logs.txt
 pip-delete-this-directory.txt
 
 # Unit test / coverage reports
@@ -118,3 +119,4 @@ env/
 
 ### Configuration files ###
 .env
+.vagrant/
