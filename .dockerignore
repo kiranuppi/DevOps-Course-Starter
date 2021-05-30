@@ -1,0 +1,6 @@
+.env
+.git
+Dockerfile
+README.md
+.vagrant
+Vagrantfile

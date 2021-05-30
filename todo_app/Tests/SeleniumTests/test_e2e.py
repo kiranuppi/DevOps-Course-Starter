@@ -7,7 +7,7 @@ from selenium import webdriver
 
 import todo_app.app as app
 
-file_path = find_dotenv('.env.test')
+file_path = find_dotenv('.env')
 load_dotenv(file_path, override=True)
 # load_dotenv()
 api_key = os.environ.get('API_KEY')

@@ -1,8 +1,7 @@
 FROM python:3.9-buster as base
 # Perform common operations, dependency installation etc...
 RUN apt-get update && apt-get install -y \
-    curl \
-    git
+    curl
 
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 # Adding poetry to PATH
@@ -14,7 +13,8 @@ COPY . /app/
 # Defaults
 WORKDIR /app/
 
-RUN poetry install
+#RUN poetry install
+RUN poetry config virtualenvs.create false --local && poetry install --no-dev
 
 FROM base as production
 # Configure for production
