@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, request, app
+from flask import Flask, render_template, redirect, url_for, request
 
+from todo_app.ViewModel import ViewModel
 from todo_app.data.Trello import trello
 from todo_app.flask_config import Config
 
@@ -7,12 +8,13 @@ from todo_app.flask_config import Config
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    trello.init()
 
     @app.route('/')
     def index():
-        app.logger.info('Getting all cards from the board')
-        items = trello.get_list_items()
-        return render_template('index.html', items=items)
+        item_view_model = ViewModel(
+            trello.get_list_items(), trello.get_current_sort_order())
+        return render_template('index.html', view_model=item_view_model)
 
     @app.route('/', methods=['POST'])
     def add_item():
@@ -30,7 +32,9 @@ def create_app():
 
         return redirect('/')
 
-    if __name__ == '__main__':
-        app.run()
+    @app.route('/sortby/<sortby>')
+    def sort_by(sortby):  # pylint:disable=unused-variable
+        trello.set_current_sort_order(sortby)
+        return redirect('/')
 
     return app

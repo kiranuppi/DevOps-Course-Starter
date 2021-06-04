@@ -1,60 +1,274 @@
 {% extends "layout.html" %}
-{% block title %}To-Do App{% endblock %}
+{% block name %}To-Do App{% endblock %}
 
 {% block content %}
 <div class="jumbotron">
-    <h1 class="display-4">To-Do App</h1>
-    <p class="lead">Just another to-do app.</p>
+  <h1 class="display-4">To-Do App</h1>
+  <p class="lead">Just another to-do app.</p>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        <h2>New item</h2>
-        <form action="{{ url_for('add_item') }}" method="POST">
-            <div class="form-group form-row align-items-center">
-                <div class="col-auto">
-                    <label for="title-input">Title</label>
-                </div>
-                <div class="col">
-                    <input type="text" name="title" id="title-input" class="form-control">
-                </div>
-                <div class="col-auto">
-                    <button type="submit" name="submit" id="create-item" class="btn btn-success">Add Item</button>
-                </div>
-            </div>
-        </form>
-    </div>
+  <div class="col-md-12">
+    <h2>Add New To-Do Item</h2>
+    <form action="/" method="post" class="form-group">
+      <div class="input-group mb-3">
+        <input type="text" name="title" id="title" class="form-control" maxlength="250" placeholder="Enter Item Title"
+          aria-label="Enter Item Title" aria-describedby="inputGroup-sizing-default" required>
+        <button type="submit" id="add-item" class="btn btn-success">Add</button>
+      </div>
+    </form>
+  </div>
 </div>
 
-<div class="table-responsive">
-    <table class="table table-bordered table-hover" id="todo_list">
-        <tr>
-            <th scope="col"><p class="text-center">Title</p></th>
-            <th scope="col"><p class="text-center">Status</p></th>
-            <th scope="col"><p class="text-center">Action</p></th>
-        </tr>
-        </thead>
+<nav>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <a class="nav-item nav-link{{view_model.get_active_tab_class('To Do')}}" id="nav-todo-tab" data-toggle="tab"
+      href="#nav-todo" role="tab" aria-controls="nav-todo" aria-selected="true">To Do</a>
+    <a class="nav-item nav-link{{view_model.get_active_tab_class('Doing')}}" id="nav-doing-tab" data-toggle="tab"
+      href="#nav-doing" role="tab" aria-controls="nav-doing" aria-selected="false">Doing</a>
+    <a class="nav-item nav-link{{view_model.get_active_tab_class('Done')}}" id="nav-done-tab" data-toggle="tab"
+      href="#nav-done" role="tab" aria-controls="nav-done" aria-selected="false">Done</a>
+    <a class="nav-item nav-link{{view_model.get_active_tab_class('All')}}" id="nav-all-tab" data-toggle="tab"
+      href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="false">All</a>
+  </div>
+</nav>
+
+<div class="tab-content" id="nav-tabContent">
+  <div class="tab-pane fade{{view_model.get_active_tab_content_class('To Do')}}" id="nav-todo" role="tabpanel"
+    aria-labelledby="nav-todo-tab">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+          <tr>
+            <th scope="col"><a href="/sortby/title"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'title' else ''}}">Title</a>
+            </th>
+            <th scope="col"><a href="/sortby/status"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'status' else ''}}">Status</a>
+            </th>
+            <th scope="col"></th>
+          </tr>
         <tbody>
-        {% for item in items%}
-        <tr>
+          {% for item in view_model.items_to_do%}
+          <tr>
             <th scope="row">{{item.title}}</th>
-            <td><p class="text-center">{{item.status}}</p></td>
+            <td>{{item.status}}</td>
             <td>
+              {% if item.status == 'To Do'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Start</a>
+              {% elif item.status == 'Doing'%}
+              <a href="{{url_for('move_item', action='done', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Done</a>
+              {% elif item.status == 'Done'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Restart</a>
+              {% endif %}
+            </td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="tab-pane fade{{view_model.get_active_tab_content_class('Doing')}}" id="nav-doing" role="tabpanel"
+    aria-labelledby="nav-doing-tab">
+    <div class="table-responsive">
+      <table class="table table-hover table-bordered">
+          <tr>
+            <th scope="col"><a href="/sortby/title"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'title' else ''}}">Title</a>
+            </th>
+            <th scope="col"><a href="/sortby/status"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'status' else ''}}">Status</a>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        <tbody>
+          {% for item in view_model.items_doing%}
+          <tr>
+            <th scope="row">{{item.title}}</th>
+            <td>{{item.status}}</td>
+            <td>
+              {% if item.status == 'To Do'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Start</a>
+              {% elif item.status == 'Doing'%}
+              <a href="{{url_for('move_item', action='done', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Done</a>
+              {% elif item.status == 'Done'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Restart</a>
+              {% endif %}
+            </td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="tab-pane fade{{view_model.get_active_tab_content_class('Done')}}" id="nav-done" role="tabpanel"
+    aria-labelledby="nav-done-tab">
+
+    {% if view_model.show_all_done_items %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+          <tr>
+            <th scope="col"><a href="/sortby/title"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'title' else ''}}">Title</a>
+            </th>
+            <th scope="col"><a href="/sortby/date_last_activity"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'date_last_activity' else ''}}">Last
+                Updated</a>
+            </th>
+            <th scope="col"><a href="/sortby/status"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'status' else ''}}">Status</a>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        <tbody>
+          {% for item in view_model.items_done%}
+          <tr>
+            <th scope="row">{{item.title}}</th>
+            <td>{{item.date_last_activity}}</td>
+            <td>{{item.status}}</td>
+            <td>
+              {% if item.status == 'To Do'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Start</a>
+              {% elif item.status == 'Doing'%}
+              <a href="{{url_for('move_item', action='done', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Done</a>
+              {% elif item.status == 'Done'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Restart</a>
+              {% endif %}
+            </td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <details>
+      <summary>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+              <tr>
+                <th scope="col"><a href="/sortby/title"
+                    class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'title' else ''}}">Title</a>
+                </th>
+                <th scope="col"><a href="/sortby/date_last_activity"
+                    class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'date_last_activity' else ''}}">Last
+                    Updated</a>
+                </th>
+                <th scope="col"><a href="/sortby/status"
+                    class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'status' else ''}}">Status</a>
+                </th>
+                <th scope="col"></th>
+              </tr>
+            <tbody>
+              {% for item in view_model.items_done_recent%}
+              <tr>
+                <th scope="row">{{item.title}}</th>
+                <td>{{item.date_last_activity}}</td>
+                <td>{{item.status}}</td>
+                <td>
+                  {% if item.status == 'To Do'%}
+                  <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                    class="btn btn-outline-secondary btn-sm">Start</a>
+                  {% elif item.status == 'Doing'%}
+                  <a href="{{url_for('move_item', action='done', id=item.id)}}"
+                    class="btn btn-outline-secondary btn-sm">Done</a>
+                  {% elif item.status == 'Done'%}
+                  <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                    class="btn btn-outline-secondary btn-sm">Restart</a>
+                  {% endif %}
+                </td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+      </summary>
+      <p>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <tr>
+              <th scope="col"><a href="/sortby/title"
+                  class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'title' else ''}}">Title</a>
+              </th>
+              <th scope="col"><a href="/sortby/date_last_activity"
+                  class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'date_last_activity' else ''}}">Last
+                  Updated</a>
+              </th>
+              <th scope="col"><a href="/sortby/status"
+                  class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'status' else ''}}">Status</a>
+              </th>
+              <th scope="col"></th>
+            </tr>
+          <tbody>
+            {% for item in view_model.items_done_older%}
+            <tr>
+              <th scope="row">{{item.title}}</th>
+              <td>{{item.date_last_activity}}</td>
+              <td>{{item.status}}</td>
+              <td>
                 {% if item.status == 'To Do'%}
-                <a href="{{url_for('move_item', action='start', id=item.id)}}"
-                   class="btn-link" id={{item.id}}><p class="text-center">Move it Doing</p></a>
+                <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                  class="btn btn-outline-secondary btn-sm">Start</a>
                 {% elif item.status == 'Doing'%}
                 <a href="{{url_for('move_item', action='done', id=item.id)}}"
-                   class="btn-link" id={{item.id}}><p class="text-center">Move it to Done</p></a>
+                  class="btn btn-outline-secondary btn-sm">Done</a>
                 {% elif item.status == 'Done'%}
                 <a href="{{url_for('move_item', action='doing', id=item.id)}}"
-                   class="btn-link" id={{item.id}}><p class="text-center">Repeat Task</p></a>
+                  class="btn btn-outline-secondary btn-sm">Restart</a>
                 {% endif %}
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+      </p>
+    </details>
+    {% endif %}
+  </div>
+  <div class="tab-pane fade{{view_model.get_active_tab_content_class('All')}}" id="nav-all" role="tabpanel"
+    aria-labelledby="nav-all-tab">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+          <tr>
+            <th scope="col"><a href="/sortby/title"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'title' else ''}}">Title</a>
+            </th>
+            <th scope="col"><a href="/sortby/status"
+                class="list-group-item list-group-item-action{{' active' if view_model.sort_order.column == 'status' else ''}}">Status</a>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        <tbody>
+          {% for item in view_model.items%}
+          <tr>
+            <th scope="row">{{item.title}}</th>
+            <td>{{item.status}}</td>
+            <td>
+              {% if item.status == 'To Do'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Start</a>
+              {% elif item.status == 'Doing'%}
+              <a href="{{url_for('move_item', action='done', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Done</a>
+              {% elif item.status == 'Done'%}
+              <a href="{{url_for('move_item', action='doing', id=item.id)}}"
+                class="btn btn-outline-secondary btn-sm">Restart</a>
+              {% endif %}
             </td>
-        </tr>
-        {%endfor%}
+          </tr>
+          {%endfor%}
         </tbody>
-    </table>
+      </table>
+    </div>
+  </div>
 </div>
-</div>
+
 {% endblock %}
