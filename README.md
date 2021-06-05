@@ -96,7 +96,7 @@ Then Run,
 ```bash
 docker run --env-file ./.env -p 5100:8080 todo-app:prod     
 ```
-Now visit [`http://localhost:5000/`](http://localhost:5100/) in your web browser to view the app.
+Now visit [`http://localhost:5100/`](http://localhost:5100/) in your web browser to view the app.
 
 ## Running the App in a Docker container using Docker compose
 ```bash

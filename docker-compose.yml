@@ -9,4 +9,4 @@ services:
     env_file:
       - .env
     volumes:
-    - ./todo_app:/todo_app
+    - ./todo_app:/app/todo_app
