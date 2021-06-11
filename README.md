@@ -52,6 +52,24 @@ You should see output similar to the following:
  * Debugger PIN: 226-556-590
 ```
 
+
+## Tests
+
+### Unit and Integration Tests
+You can run both unit and integration tests suites using pytest. Run this from the root directory:
+
+`$ poetry run pytest tests`
+
+### End to End Tests
+You can run End to End tests suites using pytest. Check following dependencies are met:
+* Firefox is installed on your system
+* [`geckodriver`](https://github.com/mozilla/geckodriver/releases) is available ideally in the system/path or at least in the project folder.
+
+Run this from the root directory:
+
+    `$ poetry run pytest tests/tests_e2e`
+
+
 ## Running the App in a VM
  run vagrant up
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app.
@@ -78,7 +96,7 @@ Then Run,
 ```bash
 docker run --env-file ./.env -p 5100:8080 todo-app:prod     
 ```
-Now visit [`http://localhost:5000/`](http://localhost:5100/) in your web browser to view the app.
+Now visit [`http://localhost:5100/`](http://localhost:5100/) in your web browser to view the app.
 
 ## Running the App in a Docker container using Docker compose
 ```bash

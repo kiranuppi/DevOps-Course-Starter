@@ -1,0 +1,12 @@
+.env
+.git
+Dockerfile
+README.md
+.vagrant
+Vagrantfile
+.github
+.pytest_cache
+.vscode
+geckodriver.log
+logs.txt
+requirement.txt
