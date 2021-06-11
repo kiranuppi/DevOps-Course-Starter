@@ -20,8 +20,6 @@ def app_with_temp_board():
 
     trello.init()
     trello.create_temp_board_set_env()
-    # os.environ['BOARD_ID'] = board_id
-    # construct the new application
 
     print(os.environ['BOARD_ID'])
     app = create_app()
@@ -48,12 +46,9 @@ def test_task_journey(driver, app_with_temp_board):
     driver.get("http://localhost:5000/")
     driver.implicitly_wait(5)
     assert driver.title == 'To-Do App'
-    driver.implicitly_wait(5)
 
     start_button_text = ".//a[contains(text(), 'Start')]"
     done_button_text = '.btn.btn-outline-secondary.btn-sm'
-    restart_button_text = ".//a[contains(text(), 'Restart')]"
-    delete_button_text = ".//a[contains(text(), 'Delete')]"
 
     # Test creating a new task and check if it exists on the web page
     task_name = 'Add new Task.'

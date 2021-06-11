@@ -41,11 +41,9 @@ def test_create_board(mock_post_requests):
 
 
 def create_board_mock(url, params):
-    mock_file = None
     if url == trello.boards_url:
-        mock_file = 'new_board'
-    else:
         return None
+    mock_file = 'new_board'
     response = Mock()
     with open(f'{os.getcwd()}/tests/data/{mock_file}.json') as json_file:
         new_board = json.load(json_file)

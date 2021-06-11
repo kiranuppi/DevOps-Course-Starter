@@ -85,8 +85,7 @@ class trello:
         items = []
         for card in cards:
             status = search_list(lists, 'id', card['idList'])['name']
-            items.append(TrelloItem(card['id'], card['name'], status, card['dateLastActivity']))
-
+            items.append(TrelloItem(card['id'], card['name'], status, to_utc_datetime(card['dateLastActivity'])))
         return items
 
     @classmethod
@@ -129,7 +128,6 @@ class trello:
     @staticmethod
     def create_board(board_name):
         params = trello.headers | {ResponseFilter.name: board_name}
-        print(params)
         response = requests.post(
             url=trello.boards_url, params=params).json()
         return response
