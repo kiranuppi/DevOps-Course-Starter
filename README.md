@@ -87,5 +87,5 @@ docker-compose up --build
 
 Now visit [`http://localhost:8080/`](http://localhost:8080/) in your web browser to view the app.
 
-## Viewing the Architecture Diagrams 
- Visit https://app.diagrams.net/ and select "Open Exsisting Diagram" option, navigate to “documentation” folder and select the appropriate diagram to view
+## Viewing the Architecture Diagrams
+ Visit [`https://app.diagrams.net/`](https://app.diagrams.net/)  and select "Open Existing Diagram" option, navigate to “documentation” folder and select the appropriate diagram to view
