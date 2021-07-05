@@ -1,10 +1,10 @@
+language: python
 services:
   - docker
 jobs:
   include:
-    - stage: build docker image
+    - stage: build and test
       script:
       - docker build --target test  --tag todo-app:test .
-    - stage: Run Tests
-      script: docker run --env-file ./.env.test todo-app:test tests
-    - script: docker run --env-file ./.env todo-app:test tests_e2e
+      - docker run --env-file ./.env.test todo-app:test tests
+      - docker run --env-file ./.env todo-app:test tests_e2e
