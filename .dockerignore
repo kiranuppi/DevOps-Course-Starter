@@ -15,4 +15,4 @@ geckodriver.log
 logs.txt
 requirement.txt
 .venv
-__pycache__
+**/__pycache__
