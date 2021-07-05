@@ -6,12 +6,5 @@ jobs:
   - stage: build and test
     script:
     - docker build --target test  --tag todo-app:test .
-    - docker run todo-app:test tests_e2e
+    - docker run -e API_KEY API_TOKEN todo-app:test tests_e2e
     - docker run --env-file ./.env.test todo-app:test tests
-env:
-  global:
-    - key:
-        - secure: KdwmPIP+SNU7SHzM4dz4zXyrf7uxmLsUYylJvszb33gpQLIgKKtRh97jlZdM8ZMLqNgPv34KZVDNvjtkuKuIBQJPQtkhFCiCD/LPRLwAcBKigTonUBH0btn0UZirJr2q8M3TURAggjMgfTaZeSa0Lxy61wG2MjHvX0DmpxSu6OK9N7nzcEOLiGivHZA7KJ3HIHYZ3NLUon9gijHIwU+/kiIZrDvwr719nzfbaJiUc+nQl09P82nrYVhbLZE/0Pht/6njWlVmnBl3xydqFOSGBre/33uAYZLudoh5n+Lf6/ITYRnrtawoNQMELHhX988iBRuvJkxOu3ekfilkhh0TD6sskfVNCAopzEj+B/CtmShFi4DexiKGiyJ1qpU5qRLA6BvLOXXwld/cMQRYwE2/FQEtNtGp2KG7z15VhGSfIlpjTa7y3MIu3W5NwsVhwOdy8huCzWiFJobC/YL9sNNqNdKvz7LpX4GhD3yuaz8GberDSDAVCimDWorg7wd8y45ZEB2B3CXxF5E0X6aZgnO/fzaX1BF9EmAsLjsZrmifycLEdjFj7p4xOtqRyHjd3xCCI35G7ThPUoXxvUBNSyBGXnvse6GvsRcD3G/tdd4thBU6oRjB0XY4e0JRS+2nJ3ejTSvTAwte8zhCwt9ADdzC35MqkDjfzM1BAQS/Nnbk8dU=
-    - token:
-        - secure: qjCISsXZfOrq7yzEynIosC1D1QtoZn2CNDGpe/wQhl7EICsrbhkR5Sqr8mW2J6juQ6Az6KBTckPvlN4N2S4S72ecPURJpZpO0smNfNiHpNe6+a/Bs785SJsTQDnJ4hJLqyC26kX9qPv9iE9IeBAcuxdNb7NO/5PnwzTwlydKSZBIG7+hlZu9td5PNdYfAdY9pq8hoxuNFqodUw1fCc9FnFgCvZYCNZV0vKAeqUavfF5+nL5Eg7j51FPpnMqEwYJ6v1z9I+epWlRaKimtVN4CFLNTOZSRvVC6Xy5Mj4PxafYoo/XGx2hOBiWBNfYm+mFJWMOD0VxY84q66ZqW5k6HEfN8fhknydJA0VNZnzdbhI8PcFpXcjz9plK5/C/ds1slxHQevfiATLp/+V0mGNA9+jI8oltBZDlsdRvgtUApNDjbbUgr682MOH7JnnJhnbiQM/0uAnAWkjLoFkMOp7Cka4tu13myxZl5eTGuHxWkLPfAE7qrk8fRm1kemtr1EMZb8Bt/ex09tw5m37IQK3iFOa34BbyCVKpF+q2A5oDoBda+XgOHpNLgq5JzlcwkFYYQLUAQmGS8I+bYThXV6rl9vr5jSujDg1q3ygvzaLQW/IuQ8WwxGcXNwEKEatZ4MBZhnwqIYohNRlPkF42QVqPzraVh4T1TY1C9dkurr6fslPY=
-
