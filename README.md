@@ -83,7 +83,7 @@ docker build --target development --tag todo-app:dev .
 ```
 Then Run, 
 ```bash
-docker run --env-file ./.env  -p  5000:8080 --mount type=bind,source="$(pwd)"/todo_app,target=/app/todo_app todo-app:dev
+docker run --env-file ./.env  -p  5000:8080 -mount type=bind,source="$(pwd)"/todo_app,target=/app/todo_app- todo-app:dev
 ```
 Now visit [`http://localhost:5000/`](http://localhost:5000/) in your web browser to view the app. 
 
