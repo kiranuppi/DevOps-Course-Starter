@@ -104,3 +104,13 @@ docker-compose up --build
 ```
 
 Now visit [`http://localhost:8080/`](http://localhost:8080/) in your web browser to view the app.
+
+## Travis CI
+#### Set up Travis CI for your repository
+Travis CI is set up to work well with GitHub but for it to work you need to enable it for any repository you want to use it for.
+
+* Go to [`Travis-ci.com`](Travis-ci.com) and Sign in with GitHub credentials.
+* Accept the Authorization of Travis CI. You’ll be redirected to GitHub.
+* Click on your profile picture in the top right of your Travis Dashboard, click Settings and then the green Activate button, and select the project repository to use with Travis CI
+* We now want to add a .travis.yml file which defines how to perform docker build and execute tests on Travis server.
+* When we push .travis.yml to the repository, Travis server will pick this up and starts executing the instructions that are defined in the .travis.yml file.
