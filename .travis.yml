@@ -8,3 +8,10 @@ jobs:
     - docker build --target test  --tag todo-app:test .
     - docker run -e SECRET_KEY -e API_KEY -e API_TOKEN todo-app:test tests_e2e
     - docker run --env-file ./.env.test todo-app:test tests
+notifications:
+  email:
+    recipients:
+      - kiranuppi@gmail.com
+    on_success: always
+    on_failure: always
+  slack: corndeldevops-jul3809:vz4EBKT04B7AidKS3MCzAVBs
