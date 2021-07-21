@@ -40,7 +40,5 @@ RUN apt-get update && \
     unzip /chromedriver/chromedriver* -d /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/chromedriver
-#RUN export PATH=$PATH:/usr/local/bin/chromedriver
-
 ENTRYPOINT ["poetry", "run", "pytest"]
 

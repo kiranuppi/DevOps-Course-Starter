@@ -125,8 +125,6 @@ class trello:
     @staticmethod
     def create_board(board_name):
         params = trello.headers | {ResponseFilter.name: board_name}
-        print(params)
-        print(trello.boards_url)
         response = requests.post(
             url=trello.boards_url, params=params).json()
         return response
