@@ -1,5 +1,8 @@
 .env
+.env.template
+geckodriver.log
 .git
+.gitignore
 Dockerfile
 README.md
 .vagrant
@@ -10,3 +13,5 @@ Vagrantfile
 geckodriver.log
 logs.txt
 requirement.txt
+.venv
+**/__pycache__

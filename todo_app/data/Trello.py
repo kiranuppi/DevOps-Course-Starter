@@ -1,8 +1,7 @@
 import uuid
-
 from todo_app.TrelloItem import TrelloItem
 from todo_app.data.ResponseFilter import ResponseFilter
-from todo_app.ListUtils import search_list, to_utc_datetime, change_key_in_list_of_dicts
+from todo_app.ListUtils import search_list, to_utc_datetime
 import requests
 import os
 
@@ -11,8 +10,6 @@ from todo_app.data.sort_manager import set_current_sort_order, get_current_sort_
 
 
 class trello:
-
-
     base_url = 'https://api.trello.com/1/'
 
     @classmethod
@@ -31,7 +28,8 @@ class trello:
         cls.done = 'Done'
 
         cls.headers = {'key': cls.api_key, 'token': cls.api_token}
-        cls.fields_from_cards = {'fields': f'{ResponseFilter.name},{ResponseFilter.id_list},{ResponseFilter.last_activity_date}'}
+        cls.fields_from_cards = {
+            'fields': f'{ResponseFilter.name},{ResponseFilter.id_list},{ResponseFilter.last_activity_date}'}
 
         cls.get_cards_header = cls.headers | cls.fields_from_cards
         cls.get_all_cards_url = f'{cls.base_url}boards/{cls.trello_board_id}/cards'
@@ -50,7 +48,6 @@ class trello:
 
         return cls.lists
 
-
     @classmethod
     def get_id_by_list_name(cls, list_name):
         lists = cls.get_lists()
@@ -58,7 +55,7 @@ class trello:
 
     @classmethod
     def get_todo_list_id(cls):
-        if cls.todo_id == None:
+        if cls.todo_id is None:
             cls.todo_id = cls.get_id_by_list_name(Status.TODO.value)
 
         return cls.todo_id
@@ -156,4 +153,3 @@ class trello:
     @staticmethod
     def set_current_sort_order(sortby):
         set_current_sort_order(sortby)
-
