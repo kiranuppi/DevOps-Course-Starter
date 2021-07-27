@@ -11,7 +11,7 @@ jobs:
 
   - stage: docker build and publish
     script:
-    - docker build --target production --tag todo-app:prod .
+    - docker build --target production --tag kiranuppi84/todo-app:prod .
     - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
     - docker push kiranuppi84/todo-app:prod
 
