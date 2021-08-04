@@ -16,12 +16,12 @@ jobs:
     - docker push kiranuppi84/todo-app:prod
 
   - stage: Deployment to Heroku
-      script:
-        - docker pull kiranuppi84/todo-app:prod
-        - docker tag kiranuppi84/todo-app:prod registry.heroku.com/ku-todo-app/web
-        - docker push registry.heroku.com/ku-todo-app/web
-        - echo "$HEROKU_PASSWORD" | heroku login -i "$HEROKU_USERNAME" --password-stdin
-        - heroku container:release web --app ku-todo-app
+    script:
+    - docker pull kiranuppi84/todo-app:prod
+    - docker tag kiranuppi84/todo-app:prod registry.heroku.com/ku-todo-app/web
+    - docker push registry.heroku.com/ku-todo-app/web
+    - echo "$HEROKU_PASSWORD" | heroku login -i "$HEROKU_USERNAME" --password-stdin
+    - heroku container:release web --app ku-todo-app
 notifications:
   email:
     recipients:
