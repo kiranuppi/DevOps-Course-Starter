@@ -19,6 +19,7 @@ RUN poetry config virtualenvs.create false --local && poetry install --no-dev
 FROM base as production
 # Configure for production
 WORKDIR /app/
+ENV PORT=8080
 RUN chmod +x ./entrypoint.sh
 ENTRYPOINT ./entrypoint.sh
 
