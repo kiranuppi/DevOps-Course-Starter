@@ -17,7 +17,7 @@ jobs:
 
 deploy:
   provider: script
-  script: bash scripts/deploy.sh
+  script: bash ./deploy.sh
   on:
     branch: module-8
 #  - stage: Deployment to Heroku
