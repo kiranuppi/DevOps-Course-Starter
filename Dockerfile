@@ -18,12 +18,14 @@ RUN poetry config virtualenvs.create false --local && poetry install --no-dev
 
 FROM base as production
 # Configure for production
-CMD ["poetry" , "run", "gunicorn"  , "--bind", "0.0.0.0:8080", "todo_app.app:create_app()"]
-EXPOSE 8080
+WORKDIR /app/
+ENV PORT=8080
+RUN chmod +x ./entrypoint.sh
+ENTRYPOINT ./entrypoint.sh
 
 FROM base as development
 # Configure for local development
-CMD ["poetry", "run", "flask", "run", "--host", "0.0.0.0" , "--port", "8080"]
+ENTRYPOINT   ["poetry", "run", "flask", "run", "--host", "0.0.0.0" , "--port", "8080"]
 EXPOSE 8080
 
 FROM base as test

@@ -8,6 +8,19 @@ jobs:
     - docker build --target test  --tag todo-app:test .
     - docker run -e SECRET_KEY -e API_KEY -e API_TOKEN todo-app:test tests_e2e
     - docker run --env-file ./.env.test todo-app:test tests
+
+  - stage: docker build and publish
+    script:
+    - docker build --target production --tag $DOCKER_USERNAME/todo-app:prod .
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+    - docker push $DOCKER_USERNAME/todo-app:prod
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: main
+
 notifications:
   email:
     recipients:

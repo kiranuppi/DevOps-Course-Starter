@@ -127,3 +127,39 @@ Travis CI is set up to work well with GitHub but for it to work you need to enab
 * Click on your profile picture in the top right of your Travis Dashboard, click Settings and then the green Activate button, and select the project repository to use with Travis CI
 * We now want to add a .travis.yml file which defines how to perform docker build and execute tests on Travis server.
 * When we push .travis.yml to the repository, Travis server will pick this up and starts executing the instructions that are defined in the .travis.yml file.
+
+## Heroku Deployment - Continuous Deployment
+#### Step 1: Create & Configure Heroku App
+
+First, create a new Heroku app either using the web interface or CLI. You should already have a Heroku account from this Module's workshop. If not, set one up now - it's free. Make a note of the app's name.
+Once you've created an app, you'll need to provide it with the production environment variables your code needs to run. That will include your trello API credentials, and the board ID you want to use.
+You can set config values via the Heroku CLI; for example, the following snippet uploads the TRELLO_API_KEY stored in your .env file:
+```bash 
+$ heroku config:set `cat .env | grep API_KEY`
+```
+Repeat the above for API_TOKEN and Board ID as well.
+
+More information on Heroku capabilities can be found in [`https://devcenter.heroku.com/articles/container-registry-and-runtime#dockerfile-commands-and-runtime`](https://devcenter.heroku.com/articles/container-registry-and-runtime#dockerfile-commands-and-runtime)
+
+####Step 2: Push an Image to Heroku
+Heroku can't deploy images from Docker Hub directly, but instead uses its own (private) Docker registry. You need to push your image there, then tell Heroku to deploy it.
+```bash
+# Get the latest image from Docker Hub (built by your CI pipeline)
+docker pull kiranuppi84/todo-app:prod
+# Tag it for Heroku
+docker tag kiranuppi84/todo-app:prod registry.heroku.com/ku-todo-app/web
+# Login to Heruku Registry
+echo "$HEROKU_API_KEY" | docker login --username="$HEROKU_USERNAME" --password-stdin registry.heroku.com
+# Push it to Heroku registry
+docker push registry.heroku.com/ku-todo-app/web
+```
+
+####Step 3: Release it to Heroku
+
+```bash
+heroku container:login
+heroku container:release web --app ku-todo-app
+```
+#### Things to watch out for
+* Note that Heroku requires your app to listen on a port defined by the $PORT environment variable in your .env file and Adjust your Dockerfile's ENTRYPOINT to execute a shell script which can read the $PORT value from your .env file.
+* To authorise interaction with Heroku's API (such as heroku container:release web --app ku-todo-app ), set a HEROKU_API_KEY environment variable in Travis.
