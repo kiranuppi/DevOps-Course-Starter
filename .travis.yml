@@ -1,25 +1,32 @@
-language: python
-services:
+language: bash
+sudo: required
+service:
 - docker
+- docker-compose
 jobs:
   include:
-  - stage: build and test
-    script:
-    - docker build --target test  --tag todo-app:test .
-    - docker run -e SECRET_KEY -e API_KEY -e API_TOKEN todo-app:test tests_e2e
-    - docker run --env-file ./.env.test todo-app:test tests
+    - stage: build and test
+      script:
+      - docker-compose -f docker-compose-dev.yml up -d --build
+      - docker run --env-file .env.test --entrypoint poetry
+        todo-app-test:latest run pytest tests
+      - docker run -e MONGO_CONNECTION_STRING -e MONGODB_COLLECTIONNAME -e SECRET_KEY --entrypoint poetry
+        todo-app-test:latest run pytest tests_e2e
 
-  - stage: docker build and publish
-    script:
-    - docker build --target production --tag $DOCKER_USERNAME/todo-app:prod .
-    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-    - docker push $DOCKER_USERNAME/todo-app:prod
+
+before_deploy:
+- docker build --target production --tag $dockerUsername/todo-app-prod:latest .
+- echo "$dockerPassword" | docker login -u "$dockerUsername" --password-stdin
+- docker push $dockerUsername/todo-app-prod:latest
 
 deploy:
   provider: script
   script: bash ./deploy.sh
   on:
-    branch: main
+    branch: master
+
+after_success:
+- echo "All done!"
 
 notifications:
   email:
