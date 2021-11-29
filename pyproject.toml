@@ -1,20 +1,25 @@
 [tool.poetry]
 name = "todo-app"
 version = "0.1.0"
-description = "A simple To Do app for your DevOps apprenticeship"
+description = "A simple ToDo app for your DevOps apprenticeship"
 authors = []
 
 [tool.poetry.dependencies]
-python = "^3.9.0"
+python = "^3.7"
 flask = "^1.1.2"
 python-dotenv = "^0.14.0"
 requests = "^2.25.1"
-pytest = "^6.2.3"
-selenium = "^3.141.0"
 gunicorn = "^20.1.0"
+pymongo = {extras = ["srv"], version = "^3.12.1"}
+
 
 
 [tool.poetry.dev-dependencies]
+pytest = "^6.2.2"
+pytest-depends = "^1.0.1"
+selenium = "^3.141.0"
+watchdog = {extras = ["watchmedo"], version = "^2.1.2"}
+mongomock = "^3.23.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
