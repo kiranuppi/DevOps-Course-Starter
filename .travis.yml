@@ -17,7 +17,7 @@ jobs:
 before_deploy:
 - docker build --target production --tag $DOCKER_USERNAME/todo-app-prod:latest .
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-- docker push $$DOCKER_USERNAME/todo-app-prod:latest
+- docker push $DOCKER_USERNAME/todo-app-prod:latest
 
 deploy:
   provider: script
