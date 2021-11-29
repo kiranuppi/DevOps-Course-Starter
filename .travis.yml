@@ -7,7 +7,7 @@ jobs:
   include:
     - stage: build and test
       script:
-      - docker-compose -f docker-compose-dev.yml up -d --build
+      - docker build --target test  --tag todo-app:test .
       - docker run --env-file .env.test --entrypoint poetry
         todo-app-test:latest run pytest tests
       - docker run -e MONGO_CONNECTION_STRING -e MONGODB_COLLECTION_NAME -e SECRET_KEY --entrypoint poetry
