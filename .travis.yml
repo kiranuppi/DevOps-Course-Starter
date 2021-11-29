@@ -10,7 +10,7 @@ jobs:
       - docker-compose -f docker-compose-dev.yml up -d --build
       - docker run --env-file .env.test --entrypoint poetry
         todo-app-test:latest run pytest tests
-      - docker run -e MONGO_CONNECTION_STRING -e MONGODB_COLLECTIONNAME -e SECRET_KEY --entrypoint poetry
+      - docker run -e MONGO_CONNECTION_STRING -e MONGODB_COLLECTION_NAME -e SECRET_KEY --entrypoint poetry
         todo-app-test:latest run pytest tests_e2e
 
 
