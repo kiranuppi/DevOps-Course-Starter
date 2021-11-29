@@ -13,10 +13,6 @@ def create_app():
     def not_found(e):
         return render_template("error.html", error='not found!')
 
-    # @app.route('/contact')
-    # def contact():
-    #     return render_template('contact.html')
-
     #default
     @app.route('/', methods=['GET'])
     def get_index():
@@ -30,34 +26,6 @@ def create_app():
         item_view_model = ViewModel(cardslist)
         return render_template('index.html', view_model=item_view_model)
 
-    # @app.route('/getpreviousdonetasks', methods=['GET'])
-    # def get_previous_done_tasks():
-    #     cardslist = []
-    #     mongo = MongoDBClient()
-    #     qry = {
-    #         "status": "Done",
-    #         "dateLastActivity": {"$lt": datetime.datetime.strptime((datetime.date.today()).strftime("%Y-%m-%d"), '%Y-%m-%d')}
-    #     }
-    #     items = mongo.get_qryItems(qry)
-    #     for item in items:
-    #         cardslist.append(Card(item))
-    #     item_view_model = ViewModel(cardslist)
-    #     return render_template('today_done_task.html', view_model=item_view_model)
-
-    
-    # @app.route('/gettodaydonetasks', methods=['GET'])
-    # def get_today_done_tasks():
-    #     cardslist = []
-    #     mongo = MongoDBClient()
-    #     qry = {
-    #         "status": "Done",
-    #         "dateLastActivity": datetime.datetime.strptime((datetime.date.today()).strftime("%Y-%m-%d"), '%Y-%m-%d')
-    #     }
-    #     items = mongo.get_qryItems(qry)
-    #     for item in items:
-    #         cardslist.append(Card(item))
-    #     item_view_model = ViewModel(cardslist)
-    #     return render_template('today_done_task.html', view_model=item_view_model)
 
     # new task
     @app.route('/new', methods=['GET'])
