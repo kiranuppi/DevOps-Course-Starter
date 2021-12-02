@@ -2,7 +2,6 @@ language: bash
 sudo: required
 service:
 - docker
-- docker-compose
 jobs:
   include:
     - stage: build and test

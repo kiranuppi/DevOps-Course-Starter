@@ -1,6 +1,6 @@
 """Unit tests for view.py"""
 
-from todo_app.view import ViewModel
+from todo_app.models.view import View
 from todo_app.models.card import Card
 import datetime
 
@@ -19,43 +19,43 @@ for card in sample_data:
     cardslist.append(Card(card))   
  
 def test_viewmodel_empty_filterToDo_only():
-    emptyViewModel = ViewModel([])
+    emptyViewModel = View([])
     assert len(emptyViewModel.todo) == 0
 
 def test_viewmodel_filterTodo_only():
-    view_model = ViewModel(cardslist)
+    view_model = View(cardslist)
     result = view_model.todo 
     assert len(result) == 2
     assert result[0].status == "To Do"
 
 def test_viewmodel_empty_filterDoing_only():
-    emptyViewModel = ViewModel([])
+    emptyViewModel = View([])
     assert len(emptyViewModel.doing) == 0
 
 def test_viewmodel_filterDoing_only():
-    view_model = ViewModel(cardslist)
+    view_model = View(cardslist)
     result = view_model.doing
     assert result[0].status == "Doing"
     assert len(result) == 2
 
 def test_viewmodel_empty_filterDone_only():
-    emptyViewModel = ViewModel([])
+    emptyViewModel = View([])
     assert len(emptyViewModel.show_all_done_items) == 0
 
 def test_viewmodel_filter_Show_all_done_items():
-    view_model = ViewModel(cardslist)
+    view_model = View(cardslist)
     result = view_model.show_all_done_items
     assert result[0].status == "Done"
     assert len(result) == 3
 
 def test_viewmodel_filter_recent_done_items():
-    view_model = ViewModel(cardslist)
+    view_model = View(cardslist)
     result = view_model.recent_done_items
     assert result[0].status == "Done"
     assert len(result) == 1
 
 def test_viewmodel_filter_older_done_items():
-    view_model = ViewModel(cardslist)
+    view_model = View(cardslist)
     result = view_model.older_done_items
     assert result[0].status == "Done"
     assert len(result) == 2

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Edit User</title>
+{% endblock %}
+
+{% block body %}
+<br>
+<h2>Edit User:</h2>
+<hr>
+<form action='/edituser/{{user.id}}' method="POST">
+    <label for="username">Username:</label>
+    <input class="form-control" type="text" name='username' id='username' value="{{user.username}}" aria-label="Enter username" readonly=true>
+    <br>
+    <label for="role">Role (Select One):</label>
+    <select class="form-control" type="text" name='role' id='role'>
+        <option value="admin">admin</option>
+        <option value="read">read</option>
+        <option value="write">write</option>
+    </select>
+    <br>
+    <input class="btn btn-success" type='submit' value='Save'>
+    <a class="btn btn-info" href="/usermanager" role="button">Cancel</a>
+</form>
+</hr>
+
+<script>
+    document.getElementById('role').value = "{{user.role}}"
+</script>
+
+{% endblock %}
