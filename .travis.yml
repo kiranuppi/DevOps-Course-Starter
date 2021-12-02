@@ -22,7 +22,7 @@ deploy:
   provider: script
   script: bash ./deploy.sh
   on:
-    branch: module-9
+    branch: module-10
 
 after_success:
 - echo "All done!"
