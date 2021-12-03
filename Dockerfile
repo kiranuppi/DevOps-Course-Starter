@@ -29,7 +29,7 @@ FROM base as development
 RUN poetry install
 ENV FLASK_DEBUG=1
 EXPOSE 5000
-ENTRYPOINT poetry run flask run --host 0.0.0.0
+ENTRYPOINT poetry run flask run --host 127.0.0.1
 
 #Test Stage
 FROM base as test
