@@ -20,7 +20,7 @@ before_deploy:
 
 deploy:
   provider: script
-  script: bash ./deploy.sh
+  script: bash ./webhook.sh
   on:
     branch: module-10
 

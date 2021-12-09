@@ -165,7 +165,7 @@ heroku container:release web --app ku-todo-app
 * To authorise interaction with Heroku's API (such as heroku container:release web --app ku-todo-app ), set a HEROKU_API_KEY environment variable in Travis.
 
 ## Mongo DB
-We are going to create a MongoDB cluster and configure our application to use it instead of Trello APIs. We are going to use a service called [`MongoDB Atlas`] (https://www.mongodb.com/atlas/database). This will let us create a MongoDB cluster that our application can use.
+We are going to create a MongoDB cluster and configure our application to use it instead of Trello APIs. We are going to use a service called [`MongoDB Atlas`](https://www.mongodb.com/atlas/database). This will let us create a MongoDB cluster that our application can use.
 Python support for MongoDB comes in the form of PyMongo. You can add this dependency to your project with poetry (or if your project uses pip to manage dependencies, you can use pip install instead of poetry add). Connecting to MongoDB Atlas has an additional dependency, so we also need to add pymongo[srv]:
 ```bash
 poetry add pymongo pymongo[srv]
@@ -194,4 +194,10 @@ GITHUB_CLIENT_ID=client-id
 GITHUB_CLIENT_SECRET=client-secret
 ```
 
+## Migrating application to single cloud platform
+
+To-Do app has been migrated into a single cloud platform, Microsoft Azure. Here Flask App and database has been moved to Azure and production application, in a docker container, as an Azure App Service. 
+ToDo App will now use Azure's CosmosDB, which has an API compatible with MongoDB. A webhook URL has been created and Post requests to this endpoint cause your app to restart and pull the latest version of the container image from the configured registry.
+P.S : Make sure you update the Travis config to define WEBHOOK as a variable that gets read by the webhook.sh file.
+You can access the Todo app by clicking on [`https://ku-todo-app.azurewebsites.net/`](https://ku-todo-app.azurewebsites.net/)
 
