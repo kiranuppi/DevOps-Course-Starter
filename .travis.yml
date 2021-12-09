@@ -22,7 +22,7 @@ deploy:
   provider: script
   script: bash ./webhook.sh
   on:
-    branch: module-10
+    branch: module-11
 
 after_success:
 - echo "All done!"
