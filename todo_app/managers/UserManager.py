@@ -7,24 +7,25 @@ from flask_login import current_user
 class Connection():
     def __init__(self):
         self.mongo_connection_string = os.environ['MONGO_CONNECTION_STRING']
+        self.mongo_db_name = os.environ['MONGO_DB_NAME']
         self.mongo_collection_name = os.environ['MONGODB_COLLECTION_NAME']
         self.client = pymongo.MongoClient(self.mongo_connection_string, ssl_cert_reqs=ssl.CERT_NONE)
-        self.mongo_db = self.client.todo_app
+        self.mongo_db = self.client[self.mongo_db_name]
         self.collection = self.mongo_db.users
 
 
-class DB_User_Manager(Connection):
-    def get_totalusercount(self):
+class DbUserManager(Connection):
+    def get_total_user_count(self):
         return self.collection.find().count()
 
-    def get_findusercount(self, qry):
+    def get_find_user_count(self, qry):
         if qry != '':
             return self.collection.find(qry).count()
 
-    def get_AllUsers(self):
+    def get_all_users(self):
         return self.collection.find()
 
-    def get_qryItems(self, qry):
+    def get_query_items(self, qry):
         if qry != '':
             return self.collection.find(qry)
 
@@ -48,7 +49,7 @@ class DB_User_Manager(Connection):
     def get_user(self, id):
         return self.collection.find_one({"_id": ObjectId(id)})
 
-    def IsDisable(self):
+    def is_disable(self):
         disable = True
         if not (current_user.id is None):
             results = self.collection.find({"username": current_user.id})
@@ -57,9 +58,9 @@ class DB_User_Manager(Connection):
                     disable = False
         return disable
 
-    def hasRoleAdmin(self, func):
+    def has_role_admin(self, func):
         @functools.wraps(func)
-        def wrapper_hasRoleAdmin(*args, **kwargs):
+        def wrapper_has_role_admin(*args, **kwargs):
             results = self.collection.find({"username": current_user.id})
             if not (results is None):
                 for item in results:
@@ -69,11 +70,11 @@ class DB_User_Manager(Connection):
             else:
                 return render_template("error.html", error="Contact support for help.")
 
-        return wrapper_hasRoleAdmin
+        return wrapper_has_role_admin
 
-    def hasWritePermission(self, func):
+    def has_write_permission(self, func):
         @functools.wraps(func)
-        def wrapper_hasWritePermission(*args, **kwargs):
+        def wrapper_has_write_permission(*args, **kwargs):
             if current_app.config["LOGIN_DISABLED"]:
                 return func(*args, **kwargs)
             results = self.collection.find({"username": current_user.id})
@@ -85,4 +86,4 @@ class DB_User_Manager(Connection):
             else:
                 return render_template("error.html", error="Contact support for help.")
 
-        return wrapper_hasWritePermission
+        return wrapper_has_write_permission

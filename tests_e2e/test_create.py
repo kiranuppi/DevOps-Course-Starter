@@ -5,7 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from dotenv import find_dotenv, load_dotenv
 import todo_app.app as app
-from todo_app.managers.dbconnection_manager import *
+from todo_app.managers.DbConnectionManager import *
 
 
 @pytest.fixture(scope='module')
@@ -28,7 +28,7 @@ def app_with_temp_board():
 
     # Tear Down
     thread.join(1)
-    mongo = DB_Connection_Manager()
+    mongo = DbConnectionManager()
     mongo.collection.drop()
 
 

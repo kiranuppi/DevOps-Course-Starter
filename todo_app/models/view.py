@@ -39,6 +39,6 @@ class View:
         return _done_ls
 
     @property
-    def allusers(self):
+    def all_users(self):
         _users_ls = [item for item in self._items]
         return _users_ls

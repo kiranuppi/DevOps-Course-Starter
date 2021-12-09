@@ -1,7 +1,7 @@
 import os, requests
 from flask import Flask, redirect, url_for, session, request
-from todo_app.managers.dbconnection_manager import *
-from todo_app.managers.user_manager import *
+from todo_app.managers.DbConnectionManager import *
+from todo_app.managers.UserManager import *
 from todo_app.models.view import View
 from todo_app.models.card import Card
 from todo_app.models.user import User
@@ -38,8 +38,8 @@ def create_app():
     token_endpoint = "https://github.com/login/oauth/access_token"
 
     client = WebApplicationClient(client_id)
-    todo = DB_Connection_Manager()
-    usermanager = DB_User_Manager()
+    todo = DbConnectionManager()
+    user_manager = DbUserManager()
 
     login_manager = LoginManager()
     login_manager.init_app(app)
@@ -98,15 +98,15 @@ def create_app():
         userinfo_response = requests.get(uri, headers=headers, data=body)
         if userinfo_response.ok:
             account_info_json = userinfo_response.json()
-            currentUserName = str(account_info_json['login'])
-            login_user(UserToLogin(currentUserName))
+            current_user_name = str(account_info_json['login'])
+            login_user(UserToLogin(current_user_name))
 
-            if usermanager.get_totalusercount() == 0:
-                usermanager.create_user(username=currentUserName, role="admin")
+            if user_manager.get_total_user_count() == 0:
+                user_manager.create_user(username=current_user_name, role="admin")
 
-            if (usermanager.get_totalusercount() > 0) and (
-                    usermanager.get_findusercount(qry={"username": currentUserName}) == 0):
-                usermanager.create_user(username=currentUserName, role="read")
+            if (user_manager.get_total_user_count() > 0) and (
+                    user_manager.get_find_user_count(qry={"username": current_user_name}) == 0):
+                user_manager.create_user(username=current_user_name, role="read")
 
         return redirect(url_for('get_index'))
 
@@ -125,30 +125,30 @@ def create_app():
     @app.route('/home', methods=['GET'])
     @login_required
     def get_index():
-        cardslist = []
-        items = todo.get_AllItems()
+        cards_list = []
+        items = todo.get_all_items()
         if (app.config['LOGIN_DISABLED']):
-            userRole = False
+            user_role = False
         else:
-            userRole = usermanager.IsDisable()
+            user_role = user_manager.is_disable()
 
         for item in items:
-            cardslist.append(Card(item))
-        item_view_model = View(cardslist)
-        return render_template('index.html', view_model=item_view_model, strRole=userRole)
+            cards_list.append(Card(item))
+        item_view_model = View(cards_list)
+        return render_template('index.html', view_model=item_view_model, strRole=user_role)
 
     # new task
     @app.route('/new', methods=['GET'])
     @login_required
-    @usermanager.hasWritePermission
+    @user_manager.has_write_permission
     def getnew_post():
         return render_template('new_task.html')
 
     @app.route('/', methods=['POST'])
     @login_required
-    @usermanager.hasWritePermission
+    @user_manager.has_write_permission
     def post_index():
-        mongo = DB_Connection_Manager()
+        mongo = DbConnectionManager()
         response = mongo.create_task(
             name=request.form['title'],
             due=request.form['duedate'],
@@ -163,7 +163,7 @@ def create_app():
     # edit task
     @app.route('/edit/<id>', methods=['GET'])
     @login_required
-    @usermanager.hasWritePermission
+    @user_manager.has_write_permission
     def get_edit(id):
         item = todo.get_task(id=id)
         if (str(item) != ""):
@@ -174,7 +174,7 @@ def create_app():
 
     @app.route('/edit/<id>', methods=['POST'])
     @login_required
-    @usermanager.hasWritePermission
+    @user_manager.has_write_permission
     def post_edit(id):
         response = todo.update_task(
             id=id,
@@ -191,7 +191,7 @@ def create_app():
     # delete task
     @app.route('/delete/<id>')
     @login_required
-    @usermanager.hasWritePermission
+    @user_manager.has_write_permission
     def delete(id):
         response = todo.delete_task(id=id)
         if str(response) != "":
@@ -202,10 +202,10 @@ def create_app():
     ############# UserManagement ##########################
     @app.route('/usermanager', methods=['GET'])  # portal
     @login_required
-    @usermanager.hasRoleAdmin
-    def get_usermanager():
+    @user_manager.has_role_admin
+    def get_user_manager():
         user_list = []
-        items = usermanager.get_AllUsers()
+        items = user_manager.get_all_users()
         for item in items:
             user_list.append(User(item))
         item_view_model = View(user_list)
@@ -213,9 +213,9 @@ def create_app():
 
     @app.route('/edituser/<id>', methods=['GET'])  # Edit user
     @login_required
-    @usermanager.hasRoleAdmin
+    @user_manager.has_role_admin
     def get_edituser(id):
-        item = usermanager.get_user(id=id)
+        item = user_manager.get_user(id=id)
         if (str(item) != ""):
             item_info = User(item)
             return render_template('editUser.html', user=item_info)
@@ -224,9 +224,9 @@ def create_app():
 
     @app.route('/edituser/<id>', methods=['POST'])  # Edit user
     @login_required
-    @usermanager.hasRoleAdmin
+    @user_manager.has_role_admin
     def post_edituser(id):
-        response = usermanager.update_user(
+        response = user_manager.update_user(
             id=id,
             username=request.form['username'],
             role=request.form['role']
@@ -238,9 +238,9 @@ def create_app():
 
     @app.route('/deleteuser/<id>')  # delete user
     @login_required
-    @usermanager.hasRoleAdmin
+    @user_manager.has_role_admin
     def deleteuser(id):
-        response = usermanager.delete_user(id=id)
+        response = user_manager.delete_user(id=id)
         if str(response) != "":
             return redirect('/usermanager')
         else:

@@ -5,4 +5,4 @@ class Card:
         self.desc = item['desc']
         self.due = item['due']                     
         self.status = item['status']   
-        self.dateLastActivity = item['dateLastActivity']   
+        self.dateLastActivity = item['dateLastActivity']

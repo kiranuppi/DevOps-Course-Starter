@@ -6,17 +6,18 @@ from bson.objectid import ObjectId
 class Connection():
     def __init__(self):
         self.mongo_connection_string = os.environ['MONGO_CONNECTION_STRING']
+        self.mongo_db_name = os.environ['MONGO_DB_NAME']
         self.mongo_collection_name = os.environ['MONGODB_COLLECTION_NAME']
         self.client = pymongo.MongoClient(self.mongo_connection_string, ssl_cert_reqs=ssl.CERT_NONE)
-        self.mongo_db = self.client.todo_app
+        self.mongo_db = self.client[self.mongo_db_name]
         self.collection = self.mongo_db[self.mongo_collection_name]
 
 
-class DB_Connection_Manager(Connection):
-    def get_AllItems(self):
+class DbConnectionManager(Connection):
+    def get_all_items(self):
         return self.collection.find()
 
-    def get_qryItems(self, qry):
+    def get_query_items(self, qry):
         if qry != '':
             return self.collection.find(qry)
 
