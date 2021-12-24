@@ -28,7 +28,7 @@
                     <th class="th-sm" style="width: 65%">Title</th>
                     <th class="th-sm" style="width: 10%">Due Date</th>
                     <th class="th-sm" style="width: 10%">Status</th>
-                    <th class="th-sm" style="width: 15%" hidden>Actions</th>
+                    <th class="th-sm" style="width: 15%">Actions</th>
                 </tr>
                     {% endif %}
                 </thead>
@@ -64,7 +64,7 @@
             <table id="dtDoing" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
                 <caption></caption>
                 <thead>
-                   {% for task in view_model.doing %}
+<!--                -->
                     {% if strRole == False %}
                 <tr>
 
@@ -72,13 +72,13 @@
                     <th class="th-sm" style="width: 65%">Title</th>
                     <th class="th-sm" style="width: 10%">Due Date</th>
                     <th class="th-sm" style="width: 10%">Status</th>
-                    <th class="th-sm" style="width: 15%" hidden>Actions</th>
+                    <th class="th-sm" style="width: 15%" >Actions</th>
 
                 </tr>
                      {% endif %}
                 </thead>
                 <tbody>
-
+   {% for task in view_model.doing %}
                 <tr>
                     <td style="display:none">{{ task.id }}</td>
                     <td>{{ task.name }}</td>
@@ -113,7 +113,7 @@
                     <th class="th-sm" style="width: 65%">Title</th>
                     <th class="th-sm" style="width: 10%">Due Date</th>
                     <th class="th-sm" style="width: 10%">Status</th>
-                    <th class="th-sm" style="width: 15%" hidden>Actions</th>
+                    <th class="th-sm" style="width: 15%" >Actions</th>
                 </tr>
                 {% endif %}
                 </thead>
@@ -126,10 +126,10 @@
                     <td>{{ task.status }}</td>
                     {% if strRole == False %}
                     <td>
-                        <button class="btn btn-outline-success btn-group-sm"
+                        <button id="todo_edit" class="btn btn-outline-success btn-group-sm"
                                 onclick="window.location.href='/edit/{{task.id}}'">Edit
                         </button>
-                        <button class="btn btn-outline-danger btn-group-sm"
+                        <button id="todo_delete" class="btn btn-outline-danger btn-group-sm"
                                 onclick="window.location.href='/delete/{{task.id}}'">Delete
                         </button>
                     </td>
