@@ -2,117 +2,147 @@
 
 {% block body %}
 <div class="jumbotron">
-  <h1 class="display-4">To-Do App</h1>
-  <p class="lead">Just another to-do app.....</p>
+    <h1 class="display-4">To-Do App</h1>
+    <p class="lead">Just another to-do app.....</p>
 </div>
 <div class="row">
-  <div class="col-md-12">
-    <br></br>
-    <h1 style="display:inline"></h1>
-    
-    <a style="display:inline" class="btn btn-success float-left" href="/new">Add New Item</a>
+    <div class="col-md-12">
+        <br></br>
+        <h1 style="display:inline"></h1>
 
-    <br></br>
-    <input class="form-control" type="text" id="myInput" onkeyup="searchTask()" placeholder="Search for task.."></input>
-    <br></br>
+        <a style="display:inline" class="btn btn-success float-left" href="/new">Add New Item</a>
 
-    <details open>
-      <summary>TO DO</summary>
-      <table id="dtToDo" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
-        <caption></caption>
-        <thead>
-          <tr>
-            <th class="th-sm" style="display:none">#</th>
-            <th class="th-sm" style="width: 65%">Title</th>
-            <th class="th-sm" style="width: 10%">Due Date</th>
-            <th class="th-sm" style="width: 10%">Status</th>
-            <th class="th-sm" style="width: 15%">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for task in view_model.todo %}
-          <tr class="to-do-task">
-            <td style="display:none">{{ task.id }}</td>
-            <td>{{ task.name }}</td>
-            <td>{{ (task.due).strftime("%Y-%m-%d") }}</td>
-            <td>{{ task.status }}</td>
-            <td>
-              <a class="btn btn-outline-success btn-group-sm" href='/edit/{{task.id}}'>Edit</button>
-              <a class="btn btn-outline-danger btn-group-sm ml-3" href='/delete/{{task.id}}'>Delete</button>
-            </td>
-          </tr>
-          {% endfor%}
-        </tbody>
-        <tfoot>
-        </tfoot>
-      </table>
-    </details>
+        <br></br>
+        <input class="form-control" type="text" id="myInput" onkeyup="searchTask()"
+               placeholder="Search for task.."></input>
+        <br></br>
 
-    <details open>
-      <summary>DOING</summary>
-      <table id="dtDoing" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
-        <caption></caption>
-        <thead>
-          <tr>
-            <th class="th-sm" style="display:none">#</th>
-            <th class="th-sm" style="width: 65%">Title</th>
-            <th class="th-sm" style="width: 10%">Due Date</th>
-            <th class="th-sm" style="width: 10%">Status</th>
-            <th class="th-sm" style="width: 15%">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for task in view_model.doing %}
-          <tr>
-            <td style="display:none">{{ task.id }}</td>
-            <td>{{ task.name }}</td>
-            <td>{{ (task.due).strftime("%Y-%m-%d") }}</td>
-            <td>{{ task.status }}</td>
-            <td>
-              <a class="btn btn-outline-success btn-group-sm" href='/edit/{{task.id}}'>Edit</button>
-                <a class="btn btn-outline-danger btn-group-sm ml-3" href='/delete/{{task.id}}'>Delete</button>
-            </td>
-          </tr>
-          {% endfor%}
-        </tbody>
-        <tfoot>
-        </tfoot>
-      </table>
-    </details>
-    
-    <details open>
-      <summary>DONE</summary>
-      <table id="dtDone" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
-      <caption></caption>
-      <thead>
-        <tr>
-          <th class="th-sm" style="display:none">#</th>
-          <th class="th-sm" style="width: 65%">Title</th>
-          <th class="th-sm" style="width: 10%">Due Date</th>
-          <th class="th-sm" style="width: 10%">Status</th>
-          <th class="th-sm" style="width: 15%">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for task in view_model.show_all_done_items %}
-        <tr>
-          <td style="display:none">{{ task.id }}</td>
-          <td>{{ task.name }}</td>
-          <td>{{ (task.due).strftime("%Y-%m-%d") }}</td>
-          <td>{{ task.status }}</td>
-          <td>
-            <a class="btn btn-outline-success btn-group-sm" href='/edit/{{task.id}}'>Edit</button>
-            <a class="btn btn-outline-danger btn-group-sm ml-3" href='/delete/{{task.id}}'>Delete</button>
-          </td>
-        </tr>
-        {% endfor%}
-      </tbody>
-      <tfoot>
-      </tfoot>
-      </table>
-    </details>
+        <details open>
+            <summary>TO DO</summary>
+            <table id="dtToDo" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
+                <caption></caption>
+                <thead>
+                {% if strRole == False %}
+                <tr>
+                    <th class="th-sm" style="display:none">#</th>
+                    <th class="th-sm" style="width: 65%">Title</th>
+                    <th class="th-sm" style="width: 10%">Due Date</th>
+                    <th class="th-sm" style="width: 10%">Status</th>
+                    <th class="th-sm" style="width: 15%" hidden>Actions</th>
+                </tr>
+                    {% endif %}
+                </thead>
+                <tbody>
+                {% for task in view_model.todo %}
+                <tr class="to-do-task">
+                    <td style="display:none">{{ task.id }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>{{ (task.due).strftime("%Y-%m-%d") }}</td>
+                    <td>{{ task.status }}</td>
 
-  </div>
+                    {% if strRole == False %}
+                    <td>
+                        <button id="todo_edit" class="btn btn-outline-success btn-group-sm"
+                                onclick="window.location.href='/edit/{{task.id}}'">Edit
+                        </button>
+                        <button id="todo_delete" class="btn btn-outline-danger btn-group-sm"
+                                onclick="window.location.href='/delete/{{task.id}}'">Delete
+                        </button>
+                    </td>
+                    {% endif %}
+
+                </tr>
+                {% endfor%}
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </details>
+
+        <details open>
+            <summary>DOING</summary>
+            <table id="dtDoing" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
+                <caption></caption>
+                <thead>
+                   {% for task in view_model.doing %}
+                    {% if strRole == False %}
+                <tr>
+
+                    <th class="th-sm" style="display:none">#</th>
+                    <th class="th-sm" style="width: 65%">Title</th>
+                    <th class="th-sm" style="width: 10%">Due Date</th>
+                    <th class="th-sm" style="width: 10%">Status</th>
+                    <th class="th-sm" style="width: 15%" hidden>Actions</th>
+
+                </tr>
+                     {% endif %}
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td style="display:none">{{ task.id }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>{{ (task.due).strftime("%Y-%m-%d") }}</td>
+                    <td>{{ task.status }}</td>
+                    {% if strRole == False %}
+                    <td>
+                        <button id="doing_edit" class="btn btn-outline-success btn-group-sm"
+                                onclick="window.location.href='/edit/{{task.id}}'">Edit
+                        </button>
+                        <button id="doing_delete" class="btn btn-outline-danger btn-group-sm"
+                                onclick="window.location.href='/delete/{{task.id}}'">Delete
+                        </button>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor%}
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </details>
+
+        <details open>
+            <summary>DONE</summary>
+            <table id="dtDone" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
+                <caption></caption>
+                <thead>
+  {% if strRole == False %}
+                <tr>
+                    <th class="th-sm" style="display:none">#</th>
+                    <th class="th-sm" style="width: 65%">Title</th>
+                    <th class="th-sm" style="width: 10%">Due Date</th>
+                    <th class="th-sm" style="width: 10%">Status</th>
+                    <th class="th-sm" style="width: 15%" hidden>Actions</th>
+                </tr>
+                {% endif %}
+                </thead>
+                <tbody>
+                {% for task in view_model.show_all_done_items %}
+                <tr>
+                    <td style="display:none">{{ task.id }}</td>
+                    <td>{{ task.name }}</td>
+                    <td>{{ (task.due).strftime("%Y-%m-%d") }}</td>
+                    <td>{{ task.status }}</td>
+                    {% if strRole == False %}
+                    <td>
+                        <button class="btn btn-outline-success btn-group-sm"
+                                onclick="window.location.href='/edit/{{task.id}}'">Edit
+                        </button>
+                        <button class="btn btn-outline-danger btn-group-sm"
+                                onclick="window.location.href='/delete/{{task.id}}'">Delete
+                        </button>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor%}
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </details>
+
+    </div>
 </div>
 
 <script>
@@ -162,6 +192,7 @@
       }
     }
   }
+
 
 
 </script>

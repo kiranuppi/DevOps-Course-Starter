@@ -9,7 +9,7 @@ jobs:
       - docker build --target test  --tag todo-app-test:latest .
       - docker run --env-file .env.test --entrypoint poetry
         todo-app-test:latest run pytest tests
-      - docker run -e MONGO_CONNECTION_STRING -e MONGO_DB_NAME -e SECRET_KEY -e GITHUB_CLIENT_ID -e GITHUB_CLIENT_SECRET --entrypoint poetry
+      - docker run -e MONGO_CONNECTION_STRING -e MONGO_DB_NAME -e SECRET_KEY --entrypoint poetry
         todo-app-test:latest run pytest tests_e2e
 
 
