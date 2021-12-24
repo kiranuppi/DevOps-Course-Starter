@@ -17,7 +17,7 @@ def app_with_temp_board():
     # Loading environment variables 
     file_path = find_dotenv('.env')
     load_dotenv(file_path, override=True)
-    os.environ['LOGIN_ENABLED'] = "False"
+    os.environ['LOGIN_ENABLED'] = "True"
     # Create the new collection and save env to file   
     os.environ['MONGODB_COLLECTION_NAME'] = "tests"
 
