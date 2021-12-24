@@ -127,7 +127,7 @@ def create_app():
     def get_index():
         cards_list = []
         items = todo.get_all_items()
-        if (app.config['LOGIN_ENABLED']):
+        if (app.config['LOGIN_DISABLED']):
             user_role = False
         else:
             user_role = user_manager.is_disable()

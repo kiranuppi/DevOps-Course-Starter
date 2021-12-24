@@ -188,7 +188,7 @@ Todo App has Admin role and read roles. The very first user's github account aga
 We need to add below Environment Variables in our .env, .env.test , travis and heroku configs
 ```bash
 OAUTHLIB_INSECURE_TRANSPORT=1
-LOGIN_ENABLED=True
+LOGIN_DISABLED=True
 
 GITHUB_CLIENT_ID=client-id
 GITHUB_CLIENT_SECRET=client-secret

@@ -76,7 +76,7 @@ class DbUserManager(Connection):
     def has_write_permission(self, func):
         @functools.wraps(func)
         def wrapper_has_write_permission(*args, **kwargs):
-            if current_app.config["LOGIN_ENABLED"]:
+            if current_app.config["LOGIN_DISABLED"]:
                 return func(*args, **kwargs)
             results = self.collection.find({"username": current_user.id})
             if not (results is None):
