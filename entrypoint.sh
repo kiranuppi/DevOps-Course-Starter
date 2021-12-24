@@ -1,2 +1,2 @@
 #!/bin/bash
-poetry run gunicorn  --bind 0.0.0.0:$PORT "todo_app.app:create_app()"
+poetry run gunicorn 'todo_app.app:create_app()' --bind "0.0.0.0:${PORT:-5000}"

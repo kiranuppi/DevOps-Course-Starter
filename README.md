@@ -163,3 +163,41 @@ heroku container:release web --app ku-todo-app
 #### Things to watch out for
 * Note that Heroku requires your app to listen on a port defined by the $PORT environment variable in your .env file and Adjust your Dockerfile's ENTRYPOINT to execute a shell script which can read the $PORT value from your .env file.
 * To authorise interaction with Heroku's API (such as heroku container:release web --app ku-todo-app ), set a HEROKU_API_KEY environment variable in Travis.
+
+## Mongo DB
+We are going to create a MongoDB cluster and configure our application to use it instead of Trello APIs. We are going to use a service called [`MongoDB Atlas`](https://www.mongodb.com/atlas/database). This will let us create a MongoDB cluster that our application can use.
+Python support for MongoDB comes in the form of PyMongo. You can add this dependency to your project with poetry (or if your project uses pip to manage dependencies, you can use pip install instead of poetry add). Connecting to MongoDB Atlas has an additional dependency, so we also need to add pymongo[srv]:
+```bash
+poetry add pymongo pymongo[srv]
+```
+We need to add below Environment Variables in our .env, .env.test , travis and heroku configs
+```bash
+MONGODB_COLLECTION_NAME='Name of your MongoDB collection'
+MONGO_DB_NAME='MongoDB database name'
+MONGO_CONNECTION_STRING=mongodb+srv://<USER_NAME>:<PASSWORD>@cluster0.rgzrv.mongodb.net/ku13todo?retryWrites=true&w=majority
+
+```
+## Adding authentication and authorisation to the app
+In order for us to protect our app being used freely by public, we are going to restrict by adding restrictions to our app using Github authentication through OAuth flow.
+We need to register our to_do app for Github and install oauthlib and flask-login
+```bash
+ poetry add oauthlib flask-login
+```
+
+Todo App has Admin role and read roles. The very first user's github account against which app gets registered will become an Admin who can then change the roles for other users.
+We need to add below Environment Variables in our .env, .env.test , travis and heroku configs
+```bash
+OAUTHLIB_INSECURE_TRANSPORT=1
+LOGIN_DISABLED=True
+
+GITHUB_CLIENT_ID=client-id
+GITHUB_CLIENT_SECRET=client-secret
+```
+
+## Migrating application to single cloud platform
+
+To-Do app has been migrated into a single cloud platform, Microsoft Azure. Here Flask App and database has been moved to Azure and production application, in a docker container, as an Azure App Service. 
+ToDo App will now use Azure's CosmosDB, which has an API compatible with MongoDB. A webhook URL has been created and Post requests to this endpoint cause your app to restart and pull the latest version of the container image from the configured registry.
+P.S : Make sure you update the Travis config to define WEBHOOK as a variable that gets read by the webhook.sh file.
+You can access the Todo app by clicking on [`https://ku-todo-app.azurewebsites.net/`](https://ku-todo-app.azurewebsites.net/)
+
