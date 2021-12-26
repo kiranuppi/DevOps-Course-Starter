@@ -2,30 +2,46 @@ language: bash
 sudo: required
 service:
 - docker
+- install:
+    - wget https://releases.hashicorp.com/terraform/"$TF_VERSION"/terraform_"$TF_VERSION"_linux_amd64.zip
+    - unzip terraform_"$TF_VERSION"_linux_amd64.zip
+    - sudo mv terraform /usr/local/bin/
+    - rm terraform_"$TF_VERSION"_linux_amd64.zip
 jobs:
   include:
     - stage: build and test
       script:
+      - cd terraform/dev
+      - terraform init
+      - terraform plan -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME"
+      - terraform apply -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME" -auto-approve
+      - export MONGO_CONNECTION_STRING="$(terraform output -raw test_cosmosdb_connection_string)"
+      - cd ../..
       - docker build --target test  --tag todo-app-test:latest .
       - docker run --env-file .env.test --entrypoint poetry
         todo-app-test:latest run pytest tests
       - docker run -e MONGO_CONNECTION_STRING -e MONGO_DB_NAME -e SECRET_KEY -e GITHUB_CLIENT_ID -e GITHUB_CLIENT_SECRET --entrypoint poetry
         todo-app-test:latest run pytest tests_e2e
-
-
-before_deploy:
-- docker build --target production --tag $DOCKER_USERNAME/todo-app-prod:latest .
-- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-- docker push $DOCKER_USERNAME/todo-app-prod:latest
-
-deploy:
-  provider: script
-  script: bash ./webhook.sh
-  on:
-    branch: module-11
-
-after_success:
-- echo "All done!"
+      - docker stop $(docker ps --format "{{.ID}}")
+      - cd ./terraform/dev
+      - terraform destroy -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME" -auto-approve
+    - stage: Docker Push
+      script:
+        - docker build --target production --tag $DOCKER_USERNAME/todo-app-prod:latest .
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+        - docker push $DOCKER_USERNAME/todo-app-prod:latest
+    - stage: Publish Production
+      if: branch = master
+      script:
+      - cd terraform/prod
+      - terraform init
+      - terraform plan -var "prefix=prod" -var "location=$LOCATION" -var "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" -var "DOCKER_REGISTRY_SERVER_USERNAME=$DOCKER_USERNAME" -var "DOCKER_REGISTRY_SERVER_PASSWORD=$DOCKER_PASSWORD" -var "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" -var "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" -var "MONGODB_COLLECTION_NAME=$MONGODB_COLLECTION_NAME" -var "SECRET_KEY=$SECRET_KEY"
+      - terraform apply -var "prefix=prod" -var "location=$LOCATION" -var "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" -var "DOCKER_REGISTRY_SERVER_USERNAME=$DOCKER_USERNAME" -var "DOCKER_REGISTRY_SERVER_PASSWORD=$DOCKER_PASSWORD" -var "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" -var "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" -var "MONGODB_COLLECTION_NAME=$MONGODB_COLLECTION_NAME" -var "SECRET_KEY=$SECRET_KEY" -auto-approve
+      - export MONGO_CONNECTION_STRING="$(terraform output -raw cosmos_connection_string)"
+      - export WEBHOOK_URL="$(terraform output -raw cd_webhook)"
+    - stage: Web App Refresh
+      if: branch == module-12
+      script: bash ./webhook.sh
 
 notifications:
   email:
