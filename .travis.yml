@@ -6,7 +6,7 @@ install:
 - curl -sSL -o terraform.zip "https://releases.hashicorp.com/terraform/"$TF_VERSION"/terraform_"$TF_VERSION"_linux_amd64.zip"
 #- sudo wget https://releases.hashicorp.com/terraform/"$TF_VERSION"/terraform_"$TF_VERSION"_linux_amd64.zip
 #- sudo unzip -o terraform_"$TF_VERSION"_linux_amd64.zip
-- sudo unzip -f terraform.zip -d
+- sudo unzip -f terraform.zip
 - sudo mv terraform /usr/local/bin/
 #- rm terraform_"$TF_VERSION"_linux_amd64.zip
 - rm terraform.zip
