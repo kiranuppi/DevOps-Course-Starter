@@ -3,7 +3,7 @@ sudo: required
 service:
 - docker
 install:
--curl -sSL -o terraform.zip "https://releases.hashicorp.com/terraform/"$TF_VERSION"/terraform_"$TF_VERSION"_linux_amd64.zip"
+- curl -sSL -o terraform.zip "https://releases.hashicorp.com/terraform/"$TF_VERSION"/terraform_"$TF_VERSION"_linux_amd64.zip"
 #- sudo wget https://releases.hashicorp.com/terraform/"$TF_VERSION"/terraform_"$TF_VERSION"_linux_amd64.zip
 #- sudo unzip -o terraform_"$TF_VERSION"_linux_amd64.zip
 - sudo unzip -o terraform.zip
