@@ -14,7 +14,7 @@ jobs:
   include:
     - stage: build and test
       script:
-      - cd ./terraform/dev
+      - cd terraform/dev
       - terraform init
       - terraform plan -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME"
       - terraform apply -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME" -auto-approve
