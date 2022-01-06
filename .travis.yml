@@ -34,7 +34,7 @@ jobs:
     - stage: Publish Production
       if: branch = module-12
       script:
-      - cd terraform_env/prod
+      - cd terraform_env/production
       - terraform init
       - terraform plan -var "prefix=prod" -var "location=$LOCATION" -var "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" -var "DOCKER_REGISTRY_SERVER_USERNAME=$DOCKER_USERNAME" -var "DOCKER_REGISTRY_SERVER_PASSWORD=$DOCKER_PASSWORD" -var "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" -var "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" -var "MONGODB_COLLECTION_NAME=$MONGODB_COLLECTION_NAME" -var "SECRET_KEY=$SECRET_KEY"
       - terraform apply -var "prefix=prod" -var "location=$LOCATION" -var "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" -var "DOCKER_REGISTRY_SERVER_USERNAME=$DOCKER_USERNAME" -var "DOCKER_REGISTRY_SERVER_PASSWORD=$DOCKER_PASSWORD" -var "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" -var "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" -var "MONGODB_COLLECTION_NAME=$MONGODB_COLLECTION_NAME" -var "SECRET_KEY=$SECRET_KEY" -auto-approve
