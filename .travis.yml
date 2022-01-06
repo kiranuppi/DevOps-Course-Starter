@@ -14,7 +14,7 @@ jobs:
   include:
     - stage: build and test
       script:
-      - cd terraform/dev
+      - cd terraform_env/dev
       - terraform init
       - terraform plan -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME"
       - terraform apply -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME" -auto-approve
@@ -24,7 +24,7 @@ jobs:
       - docker run --env-file .env.test --entrypoint poetry todo-app-test:latest run pytest tests
       - docker run -e MONGO_CONNECTION_STRING -e MONGO_DB_NAME -e SECRET_KEY -e GITHUB_CLIENT_ID -e GITHUB_CLIENT_SECRET --entrypoint poetry  todo-app-test:latest run pytest tests_e2e
 #      - docker stop $(docker ps --format "{{.ID}}")
-      - cd ./terraform/dev
+      - cd ./terraform_env/dev
       - terraform destroy -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME" -auto-approve
     - stage: Docker Push
       script:
@@ -34,7 +34,7 @@ jobs:
     - stage: Publish Production
       if: branch = master
       script:
-      - cd terraform/prod
+      - cd terraform_env/prod
       - terraform init
       - terraform plan -var "prefix=prod" -var "location=$LOCATION" -var "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" -var "DOCKER_REGISTRY_SERVER_USERNAME=$DOCKER_USERNAME" -var "DOCKER_REGISTRY_SERVER_PASSWORD=$DOCKER_PASSWORD" -var "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" -var "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" -var "MONGODB_COLLECTION_NAME=$MONGODB_COLLECTION_NAME" -var "SECRET_KEY=$SECRET_KEY"
       - terraform apply -var "prefix=prod" -var "location=$LOCATION" -var "RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME" -var "DOCKER_REGISTRY_SERVER_USERNAME=$DOCKER_USERNAME" -var "DOCKER_REGISTRY_SERVER_PASSWORD=$DOCKER_PASSWORD" -var "GITHUB_CLIENT_ID=$GITHUB_CLIENT_ID" -var "GITHUB_CLIENT_SECRET=$GITHUB_CLIENT_SECRET" -var "MONGODB_COLLECTION_NAME=$MONGODB_COLLECTION_NAME" -var "SECRET_KEY=$SECRET_KEY" -auto-approve
