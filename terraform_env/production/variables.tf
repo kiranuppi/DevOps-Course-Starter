@@ -43,6 +43,11 @@ variable "MONGODB_COLLECTION_NAME" {
   description = "Mongo collection name"
 }
 
+variable "MONGO_DB_NAME" {
+  type        = string
+  description = "Mongo DB name"
+}
+
 variable "SECRET_KEY" {
   type        = string
   description = "Flask application secret key"
