@@ -87,6 +87,7 @@ resource "azurerm_app_service" "main" {
     "GITHUB_CLIENT_ID"                    = var.GITHUB_CLIENT_ID
     "GITHUB_CLIENT_SECRET"                = var.GITHUB_CLIENT_SECRET
     "MONGODB_COLLECTION_NAME"             = var.MONGODB_COLLECTION_NAME
+    "MONGO_DB_NAME"                       = var.MONGO_DB_NAME
     "SECRET_KEY"                          = var.SECRET_KEY
     "OAUTHLIB_INSECURE_TRANSPORT"         = false
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = false
