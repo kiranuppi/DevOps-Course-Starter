@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block head %}
+<title>New Task Creation</title>
+{% endblock %}
+
+{% block body %}
+
+<br>
+<h2>New Task:</h2>
+<hr>
+<form action='/' method="POST">
+    <label for="title">Title:</label> 
+    <input class="form-control" type="text" name='title' id='title' placeholder="Title" aria-label="Enter Title">
+    <br>
+    <label for="duedate">Due Date:</label> 
+    <input class="form-control" type="date" id="duedate" name="duedate" value=""> 
+    <br>
+    <label for="descarea">Descriptions:</label> 
+    <textarea class="form-control" type="text" id="descarea" name="descarea" rows="4" placeholder="type task note here..."></textarea>
+    <br>
+    <br>
+    <input class="btn btn-success btn-lg" type='submit' value='Add'"">
+    <a class="btn btn-info btn-lg" href="/" role="button">Cancel</a>
+</form>
+</hr>
+
+{% endblock %}
+

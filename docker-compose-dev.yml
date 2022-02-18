@@ -1,0 +1,9 @@
+version: "3.7"
+services:
+  testapp:
+    container_name: todo-app-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: test
+    image: todo-app-test:latest

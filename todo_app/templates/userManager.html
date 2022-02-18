@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="row">
+  <div class="col-md-12">
+    <br></br>
+    <h1 style="display:inline"></h1>
+
+    <br></br>
+    <input class="form-control" type="text" id="myInput" onkeyup="searchUser()" placeholder="Search for user.."></input>
+    <br></br>
+
+    <details open>
+      <summary>User Manager</summary>
+      <table id="dtuser" class="table-bordered table-hover table-striped table-sm" cellspacing="0" width="100%">
+        <caption></caption>
+        <thead>
+          <tr>
+            <th class="th-sm" style="display:none">#</th>
+            <th class="th-sm" style="width: 65%">Username</th>
+            <th class="th-sm" style="width: 10%">Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in view_model.all_users %}
+          <tr class="user-list">
+            <td style="display:none">{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <a class="btn btn-outline-success btn-group-sm" href='/edituser/{{user.id}}'>Edit</button>
+              <a class="btn btn-outline-danger btn-group-sm ml-3" href='/deleteuser/{{user.id}}'>Delete</button>
+            </td>
+          </tr>
+          {% endfor%}
+        </tbody>
+        <tfoot>
+        </tfoot>
+      </table>
+    </details>
+  </div>
+</div>
+
+<script>
+  function searchUser() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("dtuser");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];;
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+
+</script>
+
+
+{% endblock %}

@@ -1,17 +1,31 @@
-.env
-.env.template
-geckodriver.log
-.git
-.gitignore
-Dockerfile
-README.md
-.vagrant
-Vagrantfile
+#exclude folder at root level
 .github
 .pytest_cache
+.vagrant
 .vscode
-geckodriver.log
-logs.txt
-requirement.txt
+*/__pycache_*
+
+#exclude root level files
+.env*
+.gitignore
+geckod*
+gunicorn*
+docker*.yaml
+vagrant*
 .venv
-**/__pycache__
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+*.tfvars
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
