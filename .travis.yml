@@ -22,7 +22,7 @@ jobs:
       - cd ../..
       - docker build --target test  --tag todo-app-test:latest .
       - docker run --env-file .env.test --entrypoint poetry todo-app-test:latest run pytest tests
-      - docker run -e MONGO_CONNECTION_STRING -e MONGO_DB_NAME -e SECRET_KEY -e GITHUB_CLIENT_ID -e GITHUB_CLIENT_SECRET --entrypoint poetry  todo-app-test:latest run pytest tests_e2e
+      - docker run -e MONGO_CONNECTION_STRING -e MONGO_DB_NAME -e SECRET_KEY -e GITHUB_CLIENT_ID -e GITHUB_CLIENT_SECRET -e LOG_LEVEL --entrypoint poetry  todo-app-test:latest run pytest tests_e2e
 #      - docker stop $(docker ps --format "{{.ID}}")
       - cd ./terraform_env/dev
       - terraform destroy -var "prefix=test" -var "location=$LOCATION" -var "resource_group_name=$RESOURCE_GROUP_NAME" -auto-approve
