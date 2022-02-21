@@ -223,3 +223,53 @@ We will also have to register new application  (thats hosted on Azure using terr
   * GITHUB_CLIENT_SECRET
 
 The application can be accessed by clicking on [`https://production-ku-todo-app.azurewebsites.net/home`](https://production-ku-todo-app.azurewebsites.net/home)
+
+## Loggly Integration
+#### Loggly SetUp
+Create a free trial account at Loggly [`https://www.loggly.com/`](https://www.loggly.com/). This will allow you to use all of Loggly's
+features for 30 days. (After 30 days you should still be able to use most of the
+features we set up here - the exception being the alerts set up in one of the
+stretch goals)
+
+Once you've created your account, log in and find the icon for "Logs" in the lefthand menu. Under this, select "Source Setup". Then, on the tabs along the top of
+the page, select "Customer Tokens". Add a new customer token. Copy the value of the token and make a note of it, remembering that this is a secret token so should be managed in the same way as other sensitive config values.
+
+Add a new config parameter to the app called LOGGLY_TOKEN and set it in
+your .env file.
+
+In our App, We're sending our logs to loggly using HTTPS. Make necessary changes to APP so that all the operations would be logged and sent to loggly.
+
+Now go to Loggly and navigate to Logs > Log Explorer. Set the time range from 1
+day in the past until now, and click Search. You should see your logs.
+P.S : Make sure you add the same env variable in Travis to make build run without any issues
+
+## Running Application on MiniKube
+Minikube is a version of Kubernetes that you can run locally on a development machine
+
+#### Installation and Configuration 
+Please follow the steps mentioned in [`https://minikube.sigs.k8s.io/docs/start/`](https://minikube.sigs.k8s.io/docs/start/) to install and start minikube on your machine
+Now run 
+```bash
+kubectl apply -f deployment.yaml
+```
+Make sure you dont see any error running the pod by running
+```bash
+kubectl get pods 
+```
+
+After each deployment, we need to run below command to link up our minikube Service with a port on localhost
+
+```bash
+kubectl port-forward service/module-14 5000:80 
+```
+#### Troubleshooting tips when dealing with minikube
+If you want to know if the deployment configs are correct or not
+```bash
+kubectl describe pods
+```
+If the pod is up and running and app isn't working then you can run
+
+```bash
+kubectl logs <pod_name>
+```
+Please make sure you have all the variables in the .env file has been defined in deployment.yaml 

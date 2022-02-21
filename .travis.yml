@@ -41,7 +41,7 @@ jobs:
       - export MONGO_CONNECTION_STRING="$(terraform output -raw cosmos_connection_string)"
       - export WEBHOOK_URL="$(terraform output -raw cd_webhook)"
     - stage: Web App Refresh
-      if: branch == module-12
+      if: branch == module-14
       script: bash ./webhook.sh
 
 notifications:
