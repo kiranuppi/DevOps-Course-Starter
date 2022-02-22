@@ -248,6 +248,13 @@ Minikube is a version of Kubernetes that you can run locally on a development ma
 
 #### Installation and Configuration 
 Please follow the steps mentioned in [`https://minikube.sigs.k8s.io/docs/start/`](https://minikube.sigs.k8s.io/docs/start/) to install and start minikube on your machine
+Create an image of ToDo application and push it to MiniKube
+
+```bash
+docker build --target production --tag todo-app:prod .
+minikube image load
+```
+
 Now run 
 ```bash
 kubectl apply -f deployment.yaml
@@ -255,6 +262,11 @@ kubectl apply -f deployment.yaml
 Make sure you dont see any error running the pod by running
 ```bash
 kubectl get pods 
+```
+#### Creating Kubernetes secrets for deployments
+
+```bash
+kubectl create secret generic longly-token --from-literal=LOGGLY_TOKEN=<TOKEN_VALUE>
 ```
 
 After each deployment, we need to run below command to link up our minikube Service with a port on localhost
