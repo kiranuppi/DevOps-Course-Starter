@@ -252,6 +252,9 @@ Create an image of ToDo application and push it to MiniKube
 
 ```bash
 docker build --target production --tag todo-app:prod .
+```
+Push the image to miniKube
+```bash
 minikube image load
 ```
 
