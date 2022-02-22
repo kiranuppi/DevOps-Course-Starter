@@ -175,7 +175,7 @@ def create_app():
         )
 
         if (str(response) != ""):
-            app.logger.info("User: %s created New Todo item : %s ", current_user_name,request.form['title'])
+            app.logger.info("New Todo item : %s has been created", request.form['title'], user_id)
             return redirect('/home')
         else:
             app.logger.error("Failed to create new TODO item: %s", request.form['title'])
