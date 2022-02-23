@@ -1,0 +1,59 @@
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: module-14
+spec:
+  selector:
+    matchLabels:
+      app: module-14
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: module-14
+    spec:
+      containers:
+        - name: todo-app
+          image: todo-app:prod
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 80
+          env:
+            - name: MONGODB_COLLECTION_NAME
+              value: "tasks"
+            - name: OAUTHLIB_INSECURE_TRANSPORT
+              value: "1"
+            - name: PORT
+              value: "80"
+            - name: MONGO_DB_NAME
+              value: "todo_app"
+            - name: LOGIN_DISABLED
+              value: "True"
+            - name: LOG_LEVEL
+              value: "INFO"
+            - name: GITHUB_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: github-client-id
+                  key: GITHUB_CLIENT_ID
+            - name: GITHUB_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: github-client-secret
+                  key: GITHUB_CLIENT_SECRET
+            - name: LOGGLY_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: longly-token
+                  key: LOGGLY_TOKEN
+            - name: SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret-key
+                  key: SECRET_KEY
+            - name: MONGO_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-connection-string
+                  key: MONGO_CONNECTION_STRING
