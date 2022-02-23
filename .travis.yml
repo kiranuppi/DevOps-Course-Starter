@@ -32,7 +32,7 @@ jobs:
         - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         - docker push $DOCKER_USERNAME/todo-app-prod:latest
     - stage: Publish Production
-      if: branch = module-14
+      if: branch = main
       script:
       - cd terraform_env/production
       - terraform init
@@ -41,7 +41,7 @@ jobs:
       - export MONGO_CONNECTION_STRING="$(terraform output -raw cosmos_connection_string)"
       - export WEBHOOK_URL="$(terraform output -raw cd_webhook)"
     - stage: Web App Refresh
-      if: branch == module-14
+      if: branch == main
       script: bash ./webhook.sh
 
 notifications:

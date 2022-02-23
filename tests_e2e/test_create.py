@@ -51,8 +51,6 @@ def test_task_journey(driver, app_with_temp_board):
 
 
 def test_create_task(driver, app_with_temp_board):
-    # driver.implicitly_wait(5)
-    # driver.get('http://localhost:5000/new')
     add_new_button = driver.find_element_by_link_text("Add New Item")
     add_new_button.click()
     driver.implicitly_wait(5)
